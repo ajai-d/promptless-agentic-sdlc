@@ -457,3 +457,52 @@ Gate criteria:
 - One-open-only behavior verified by UI smoke test.
 - Quick actions verified through UI behavior and persisted API state.
 - Quality gate passes with no regressions.
+
+---
+
+## SPEC-004 Plan Delta (Inline Task Edit)
+
+### 2a Architecture Delta
+
+Scope is frontend interaction/state only.
+- Primary changes in `web/app.js`, `web/styles.css`, and UI smoke tests.
+- Existing API contract reused (`PATCH /tasks/:id`) for edits.
+- No changes to server routes, validation schema, or database schema.
+
+### 2b Design Delta
+
+Interaction design:
+- Add `Edit` action in expanded task detail.
+- Switching to edit mode replaces read-only rows with inline form.
+- Maintain one-expanded-task model; edit mode scoped to expanded task.
+
+Editable field model:
+- title (required)
+- description (optional)
+- priority (low|medium|high)
+- dueDate (date or empty)
+
+Action design:
+- Save -> PATCH update -> refresh list/detail -> exit edit mode.
+- Cancel -> discard unsaved changes -> return to detail view.
+- Existing Mark Done/Delete remain available when not editing.
+
+Use-case mapping:
+- UC-004-01 -> Edit action + edit-mode render.
+- UC-004-02 -> Save handler + PATCH workflow.
+- UC-004-03 -> Cancel handler + restore detail mode.
+
+### 2c Orchestration Delta
+
+Execute sequence for SPEC-004:
+1. Add SPEC-004 addendum and spec registry update.
+2. Implement inline edit mode and save/cancel handlers.
+3. Add/adjust styles for inline edit form.
+4. Extend UI smoke coverage for edit flow.
+5. Run `npm run quality:check`.
+6. Record replay evidence and close status.
+
+Gate criteria:
+- Edit form prefill and save behavior validated by UI smoke test.
+- Cancel behavior validated (no persisted change on cancel path).
+- Quality gate passes with no regressions.

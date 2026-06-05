@@ -7,6 +7,7 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
   const priorityInputEl = documentRef.getElementById("priority-input");
   const dueDateInputEl = documentRef.getElementById("due-date-input");
   let expandedTaskId = null;
+  let editingTaskId = null;
   let lastTasks = [];
 
   function setStatus(message, isError = false) {
@@ -34,9 +35,89 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
     return fallbackMessage;
   }
 
+  function createTaskEditForm(task) {
+    const form = documentRef.createElement("form");
+    form.className = "task-edit-form";
+    form.setAttribute("data-task-edit-form", "true");
+
+    const titleLabel = documentRef.createElement("label");
+    titleLabel.textContent = "Title";
+    const titleInput = documentRef.createElement("input");
+    titleInput.type = "text";
+    titleInput.name = "title";
+    titleInput.maxLength = 120;
+    titleInput.required = true;
+    titleInput.value = task.title;
+    titleLabel.appendChild(titleInput);
+
+    const descriptionLabel = documentRef.createElement("label");
+    descriptionLabel.textContent = "Description";
+    const descriptionInput = documentRef.createElement("textarea");
+    descriptionInput.name = "description";
+    descriptionInput.maxLength = 500;
+    descriptionInput.value = task.description || "";
+    descriptionLabel.appendChild(descriptionInput);
+
+    const priorityLabel = documentRef.createElement("label");
+    priorityLabel.textContent = "Priority";
+    const prioritySelect = documentRef.createElement("select");
+    prioritySelect.name = "priority";
+    ["low", "medium", "high"].forEach((priority) => {
+      const option = documentRef.createElement("option");
+      option.value = priority;
+      option.textContent = priority;
+      if (task.priority === priority) {
+        option.selected = true;
+      }
+      prioritySelect.appendChild(option);
+    });
+    priorityLabel.appendChild(prioritySelect);
+
+    const dueDateLabel = documentRef.createElement("label");
+    dueDateLabel.textContent = "Due Date";
+    const dueDateInput = documentRef.createElement("input");
+    dueDateInput.type = "date";
+    dueDateInput.name = "dueDate";
+    dueDateInput.value = task.dueDate || "";
+    dueDateLabel.appendChild(dueDateInput);
+
+    form.appendChild(titleLabel);
+    form.appendChild(descriptionLabel);
+    form.appendChild(priorityLabel);
+    form.appendChild(dueDateLabel);
+
+    const actions = documentRef.createElement("div");
+    actions.className = "task-detail-actions";
+
+    const saveBtn = documentRef.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "task-action-btn";
+    saveBtn.setAttribute("data-action", "save-edit");
+    saveBtn.setAttribute("data-task-id", String(task.id));
+    saveBtn.textContent = "Save";
+    actions.appendChild(saveBtn);
+
+    const cancelBtn = documentRef.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.className = "task-action-btn";
+    cancelBtn.setAttribute("data-action", "cancel-edit");
+    cancelBtn.setAttribute("data-task-id", String(task.id));
+    cancelBtn.textContent = "Cancel";
+    actions.appendChild(cancelBtn);
+
+    form.appendChild(actions);
+
+    return form;
+  }
+
   function renderTaskDetails(task) {
     const detail = documentRef.createElement("div");
     detail.className = "task-detail";
+
+    if (editingTaskId === task.id) {
+      detail.appendChild(createTaskEditForm(task));
+      return detail;
+    }
 
     const fields = [
       ["Title", task.title],
@@ -76,6 +157,14 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
       actions.appendChild(markDoneBtn);
     }
 
+    const editBtn = documentRef.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "task-action-btn";
+    editBtn.setAttribute("data-action", "start-edit");
+    editBtn.setAttribute("data-task-id", String(task.id));
+    editBtn.textContent = "Edit";
+    actions.appendChild(editBtn);
+
     const deleteBtn = documentRef.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.className = "task-action-btn danger";
@@ -94,6 +183,9 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
 
     if (expandedTaskId !== null && !tasks.some((task) => task.id === expandedTaskId)) {
       expandedTaskId = null;
+    }
+    if (editingTaskId !== null && !tasks.some((task) => task.id === editingTaskId)) {
+      editingTaskId = null;
     }
 
     taskListEl.innerHTML = "";
@@ -207,8 +299,30 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
     if (expandedTaskId === taskId) {
       expandedTaskId = null;
     }
+    if (editingTaskId === taskId) {
+      editingTaskId = null;
+    }
 
     setStatus("Task deleted.");
+    await loadTasks();
+  }
+
+  async function updateTask(taskId, payload) {
+    const response = await fetchImpl(`${baseUrl}/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const message = await parseErrorMessage(response, `Update failed (${response.status})`);
+      throw new Error(message);
+    }
+
+    editingTaskId = null;
+    setStatus("Task updated.");
     await loadTasks();
   }
 
@@ -228,7 +342,46 @@ function createApp({ documentRef = document, fetchImpl = fetch, baseUrl = "" } =
     try {
       if (action === "toggle-open") {
         expandedTaskId = expandedTaskId === taskId ? null : taskId;
+        if (expandedTaskId !== taskId) {
+          editingTaskId = null;
+        }
         renderTasks(lastTasks);
+        return;
+      }
+
+      if (action === "start-edit") {
+        editingTaskId = taskId;
+        renderTasks(lastTasks);
+        return;
+      }
+
+      if (action === "cancel-edit") {
+        editingTaskId = null;
+        renderTasks(lastTasks);
+        return;
+      }
+
+      if (action === "save-edit") {
+        const item = targetButton.closest(".task-item");
+        const form = item && item.querySelector("form[data-task-edit-form='true']");
+        if (!form) {
+          return;
+        }
+
+        const formData = new FormData(form);
+        const title = String(formData.get("title") || "").trim();
+        const description = String(formData.get("description") || "");
+        const priority = String(formData.get("priority") || "medium");
+        const dueDateRaw = String(formData.get("dueDate") || "");
+
+        const payload = {
+          title,
+          description,
+          priority,
+          dueDate: dueDateRaw || null,
+        };
+
+        await updateTask(taskId, payload);
         return;
       }
 

@@ -13,6 +13,7 @@ A real project built from scratch using TMWTTY — a 3-stage methodology for wor
 | Folder | Purpose |
 |--------|---------|
 | [`tmwtty/`](./tmwtty/) | The methodology — how TMWTTY works |
+| [`spec/`](./spec/) | The requirements specification for this project |
 | [`plan/`](./plan/) | The structured plan for this project |
 | [`project/`](./project/) | Source code |
 | [`replay-execution/`](./replay-execution/) | Step-by-step playbook captured during execution |
@@ -22,8 +23,8 @@ A real project built from scratch using TMWTTY — a 3-stage methodology for wor
 
 1. Read [`tmwtty/00-tmwtty-methodology.md`](./tmwtty/00-tmwtty-methodology.md) — understand the method
 2. Follow [`tmwtty/01-getting-started.md`](./tmwtty/01-getting-started.md) — it walks you through
-3. Fill in [`tmwtty/02-seed-prompt-template.md`](./tmwtty/02-seed-prompt-template.md) — state what you want to build
-4. Generate and approve your plan in `plan/plan.md`
+3. Fill in [`tmwtty/templates/seed/02-seed-prompt-template.md`](./tmwtty/templates/seed/02-seed-prompt-template.md) — state what you want to build
+4. Generate and approve your spec in `spec/spec.md`, then your plan in `plan/plan.md`
 5. Execute — code goes to `project/`, steps recorded in `replay-execution/`
 
 ## License

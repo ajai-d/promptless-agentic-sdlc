@@ -171,6 +171,36 @@ h1 {
   gap: 6px;
 }
 
+.task-edit-form {
+  display: grid;
+  gap: 8px;
+}
+
+.task-edit-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.task-edit-form input,
+.task-edit-form textarea,
+.task-edit-form select {
+  font: inherit;
+  border: 1px solid #dfc784;
+  color: var(--text-primary);
+  background: #fffdf5;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.task-edit-form input:focus,
+.task-edit-form textarea:focus,
+.task-edit-form select:focus {
+  outline: 2px solid rgba(183, 121, 31, 0.28);
+  border-color: var(--accent);
+}
+
 .task-detail-row {
   margin: 0;
   font-size: 0.9rem;

@@ -157,24 +157,51 @@ describe("UI smoke test", () => {
     });
 
     let refreshedSecond = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+    refreshedSecond.querySelector("button[data-action='start-edit']").click();
+
+    await waitFor(() => {
+      const editingTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+      return editingTask && editingTask.querySelector(".task-edit-form");
+    });
+
+    refreshedSecond = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+    const editForm = refreshedSecond.querySelector(".task-edit-form");
+    editForm.querySelector("input[name='title']").value = "Detail Task Two Edited";
+    editForm.querySelector("textarea[name='description']").value = "updated detail test task";
+    editForm.querySelector("select[name='priority']").value = "medium";
+    editForm.querySelector("input[name='dueDate']").value = "2026-08-10";
+    refreshedSecond.querySelector("button[data-action='save-edit']").click();
+
+    await waitFor(() => {
+      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
+      return updatedTask && updatedTask.textContent.includes("medium | open");
+    });
+
+    await waitFor(() => {
+      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
+      const detail = updatedTask && updatedTask.querySelector(".task-detail");
+      return detail && detail.textContent.includes("Due Date:") && detail.textContent.includes("2026-08-10");
+    });
+
+    refreshedSecond = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
     refreshedSecond.querySelector("button[data-action='mark-done']").click();
 
     await waitFor(() => {
-      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
       return updatedTask && updatedTask.textContent.includes("done");
     });
 
     await waitFor(() => {
-      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+      const updatedTask = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
       return updatedTask && updatedTask.querySelector("button[data-action='delete']");
     });
 
-    refreshedSecond = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two"));
+    refreshedSecond = [...document.querySelectorAll("#task-list .task-item")].find((item) => item.textContent.includes("Detail Task Two Edited"));
     refreshedSecond.querySelector("button[data-action='delete']").click();
 
     await waitFor(() => {
       const items = [...document.querySelectorAll("#task-list .task-item")];
-      return !items.some((item) => item.textContent.includes("Detail Task Two"));
+      return !items.some((item) => item.textContent.includes("Detail Task Two Edited"));
     });
   });
 });

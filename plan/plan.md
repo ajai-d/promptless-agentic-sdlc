@@ -1,7 +1,7 @@
 # Plan — Top Stocks MCP Server
 
 > **Seed:** An MCP server that returns the top 5 performing stocks of the day, with a client and a simple UI to display the results.
-> **Risk Level:** 2 | **Spec:** [plan/spec.md](spec.md)
+> **Risk Level:** 2 | **Spec:** [spec/spec.md](../spec/spec.md)
 
 ---
 

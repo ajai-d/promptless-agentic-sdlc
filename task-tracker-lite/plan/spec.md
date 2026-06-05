@@ -11,6 +11,7 @@ Risk level: 2
 | SPEC-001 | Core task tracker app (API, data, web create/list, tests, CI baseline) | Implemented, Verified | `replay-execution/replay-execution.md` entries 001-011; `npm run quality:check` pass |
 | SPEC-002 | UI theme enhancement (pretty yellow background treatment) | Implemented, Verified | `plan/spec-ui-theme.md` use cases UC-002-01..03; `plan/plan.md` SPEC-002 Plan Delta; `replay-execution/replay-execution.md` entry 012; `npm run quality:check` pass |
 | SPEC-003 | Inline task detail expansion with single-open behavior and quick actions | Implemented, Verified | `plan/spec-task-detail-inline.md` use cases UC-003-01..03; `plan/plan.md` SPEC-003 Plan Delta; `replay-execution/replay-execution.md` entry 013; `npm run quality:check` pass |
+| SPEC-004 | Inline task editing from expanded detail | Implemented, Verified | `plan/spec-task-edit-inline.md` use cases UC-004-01..03; `plan/plan.md` SPEC-004 Plan Delta; `replay-execution/replay-execution.md` entry 014; `npm run quality:check` pass |
 
 ## 1b. Business Requirements (BRD)
 

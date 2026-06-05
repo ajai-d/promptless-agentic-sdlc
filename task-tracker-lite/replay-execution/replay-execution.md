@@ -301,3 +301,30 @@ Approved
 
 ### Notes
 - Enhancement remains within risk level 2 boundaries (frontend-only; no API contract changes)
+
+## Entry 014 - SPEC-004 Inline Task Edit Enhancement (Spec -> Plan -> Execute)
+
+### Approved prompt
+Enable editing tasks and execute the enhancement using the TMWTTY methodology.
+
+### Execution result
+- Added SPEC-004 addendum at `plan/spec-task-edit-inline.md` with business requirements, use cases UC-004-01..03, acceptance criteria, and traceability.
+- Updated `plan/spec.md` Spec Registry with SPEC-004 as `Implemented, Verified`.
+- Updated `plan/plan.md` with `SPEC-004 Plan Delta` (2a/2b/2c).
+- Implemented frontend edit mode in `web/app.js`:
+	- Edit action in expanded detail
+	- Inline edit form with prefilled values
+	- Save and Cancel handlers
+	- PATCH update flow for task edits
+- Added edit-form styling in `web/styles.css`.
+- Extended `tests/ui/smoke.ui.test.js` with coverage for inline edit and save flow.
+- Ran `npm run quality:check` successfully:
+	- lint passed
+	- tests passed
+	- UI smoke tests passed
+
+### Review outcome
+Approved
+
+### Notes
+- Enhancement remains within risk level 2 boundaries (frontend-only; API/data contracts unchanged)
