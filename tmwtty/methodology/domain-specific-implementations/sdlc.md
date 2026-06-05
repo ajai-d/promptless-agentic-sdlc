@@ -1,10 +1,10 @@
-# SDLC-TMWTTY
+# SDLC Tmwtty Specification
 
 ## Purpose
 
-This template is a concrete Software Development Life Cycle (SDLC) application profile of the core TMWTTY method.
+This template is a concrete Software Development Life Cycle (SDLC) Domain Tmwtty Specification that applies the Core Twitty Specification.
 
-Core method:
+Core Twitty Specification:
 
 SEED -> SPEC -> PLAN -> EXECUTE
 

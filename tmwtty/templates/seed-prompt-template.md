@@ -21,7 +21,7 @@
 1. Copy the template above
 2. Fill in "What I Want To Build" and "Done Looks Like"
 3. Save it to `<project-folder>/seed/seed.md`
-4. Give it to your AI agent with: *"Read `tmwtty/00-tmwtty-methodology.md` and follow the TMWTTY methodology."*
+4. Give it to your AI agent with: *"Read `tmwtty/methodology/core-tmwtty-methodology.md` and follow the TMWTTY methodology."*
 
 ---
 
