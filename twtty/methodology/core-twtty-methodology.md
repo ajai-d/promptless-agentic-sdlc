@@ -1,14 +1,14 @@
-# Tell Me What To Tell You (TMWTTY)
+# Tell Me What To Tell You (TWTTY)
 
 > **A framework for AI-assisted work where AI proposes each next step and guides execution, while humans stay in control.**
 
-TMWTTY is a methodology for working with AI agents that removes the burden of prompt engineering. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next prompt. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
+TWTTY is a methodology for working with AI agents that removes the burden of prompt engineering. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next prompt. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
 
-This document is the canonical and normative TMWTTY execution spec for AI agents.
+This document is the canonical and normative Core TWTTY Specification for AI agents.
 
 ## Spec intent and applicability
 
-- Primary audience: AI Agents that must execute TMWTTY consistently.
+- Primary audience: AI Agents that must execute TWTTY consistently.
 - Secondary audience: humans reviewing or governing execution.
 - Applicability: this spec SHOULD be readable and executable by any AI Agent.
 
@@ -18,11 +18,11 @@ This document is the canonical and normative TMWTTY execution spec for AI agents
 
 | Section | Purpose |
 |---------|---------|
-| [Overview](#1-overview) | What TMWTTY is and the problems it solves |
+| [Overview](#1-overview) | What TWTTY is and the problems it solves |
 | [Normative Keywords And Consistency Rules](#normative-keywords-and-consistency-rules) | Normative term usage and mandatory execution consistency rules |
 | [Core concepts](#2-core-concepts) | Key terms used throughout the methodology |
-| [How it works](#3-how-it-works) | The TMWTTY loop explained step by step |
-| [Interaction protocols](#4-interaction-protocols) | Interview Me and the TMWTTY loop |
+| [How it works](#3-how-it-works) | The TWTTY loop explained step by step |
+| [Interaction protocols](#4-interaction-protocols) | Interview Me and the TWTTY loop |
 | [Repository layout](#5-repository-layout) | Required folders and files |
 | [Runtime](#6-runtime) | GitHub Copilot runtime modes and features |
 | [Guardrails](#7-guardrails) | Security, quality, and process boundaries |
@@ -31,19 +31,19 @@ This document is the canonical and normative TMWTTY execution spec for AI agents
 | [Limitations](#10-limitations) | Honest constraints of the methodology |
 | [Agent protocol](#11-agent-protocol) | Operating instructions for AI agents |
 | [Reference](#12-reference) | Related documents |
-| [Applying TMWTTY to a Domain Tmwtty Specification](#13-applying-tmwtty-to-a-domain-tmwtty-specification) | How to apply the Core Twitty Specification through separate domain templates |
+| [Applying TWTTY to a Domain-Specific Implementation](#13-applying-twtty-to-a-domain-specific-implementation) | How to apply the Core TWTTY Specification through separate domain-specific implementations |
 
 ---
 
 ## 1. Overview
 
-### What is TMWTTY?
+### What is TWTTY?
 
-**TMWTTY ("Tell Me What To Tell You")** is a domain-agnostic framework for AI-assisted work where control remains with the Human User and execution is driven by the AI Agent. The Human User defines project intent with a Project Seed. The AI Agent proposes each next prompt, and progression is controlled by Approval Gates where the Human User approves or modifies the proposed prompt. The AI Agent executes only approved prompts and records approved prompts and outcomes in the Replay-Execution Log.
+**TWTTY ("Tell Me What To Tell You")** is a domain-agnostic framework for AI-assisted work where control remains with the Human User and execution is driven by the AI Agent. The Human User defines project intent with a Project Seed. The AI Agent proposes each next prompt, and progression is controlled by Approval Gates where the Human User approves or modifies the proposed prompt. The AI Agent executes only approved prompts and records approved prompts and outcomes in the Replay-Execution Log.
 
 ### Core lifecycle
 
-TMWTTY uses four core stages in order:
+TWTTY uses four core stages in order:
 
 ```
 SEED → SPEC → PLAN → EXECUTE
@@ -54,20 +54,20 @@ SEED → SPEC → PLAN → EXECUTE
 - **Plan** defines execution strategy and orchestration.
 - **Execute** carries out the approved plan.
 
-### Core Twitty Specification vs. Domain Tmwtty Specification
+### Core TWTTY Specification vs. Domain-Specific Implementation
 
-- **Core Twitty Specification** — The mandatory rules that apply in every domain. These include the stage order (`SEED -> SPEC -> PLAN -> EXECUTE`), Approval Gates, and replay-execution logging.
-- **Domain Tmwtty Specification** — Domain-specific rules layered on the Core Twitty Specification: stage tasks, required artifacts, and agent roles.
+- **Core TWTTY Specification** — The mandatory rules that apply in every domain. These include the stage order (`SEED -> SPEC -> PLAN -> EXECUTE`), Approval Gates, and replay-execution logging.
+- **Domain-specific implementation** — A domain-specific adaptation of the Core TWTTY Specification that defines stage tasks, required artifacts, and agent roles.
 
-This document is the Core Twitty Specification. Domain-specific implementations are maintained as separate Domain Tmwtty Specifications. One software-delivery Domain Tmwtty Specification is available at [domain-specific-implementations/sdlc.md](domain-specific-implementations/sdlc.md).
+This document is the Core TWTTY Specification. Domain-specific implementations are maintained separately. One software-delivery domain-specific implementation is available at [domain-specific-implementations/sdlc.md](domain-specific-implementations/sdlc.md).
 
-Domain Tmwtty Specifications MAY extend the Core Twitty Specification, but MUST NOT weaken approval rules, stage order, or traceability requirements.
+Domain-specific implementations MAY extend the Core TWTTY Specification, but MUST NOT weaken approval rules, stage order, or traceability requirements.
 
-### The problem TMWTTY solves
+### The problem TWTTY solves
 
-TMWTTY turns seeded intent into a repeatable implementation workflow. The Human User provides intent and approvals, the AI Agent drives specification, planning, and execution, and each approved prompt and result is captured in a replay-execution log.
+TWTTY turns seeded intent into a repeatable implementation workflow. The Human User provides intent and approvals, the AI Agent drives specification, planning, and execution, and each approved prompt and result is captured in a replay-execution log.
 
-| Challenge | Without TMWTTY | With TMWTTY |
+| Challenge | Without TWTTY | With TWTTY |
 |-----------|----------------|-------------|
 | *"I don't know what to ask the AI."* | Trial and error. | The AI interviews you to surface the right requirements. |
 | *"My process isn't repeatable."* | Knowledge lives in one person's head. | Every step is captured in a replay-execution log. |
@@ -83,7 +83,7 @@ TMWTTY turns seeded intent into a repeatable implementation workflow. The Human 
 
 The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in this spec when capitalized.
 
-1. Agents MUST use canonical TMWTTY stage and Approval Gate names as defined in this spec.
+1. Agents MUST use canonical TWTTY stage and Approval Gate names as defined in this spec.
 2. Agents MUST execute stages in order: SEED -> SPEC -> PLAN -> EXECUTE.
 3. Agents MUST NOT skip approval gates when a gate is defined.
 4. Agents MUST record every approved prompt and result in the replay-execution log, including at minimum: stage/stage task, approval gate name, approval outcome, approved prompt, execution outcome, artifact/path changed, and timestamp or sequence ID.
@@ -97,7 +97,7 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 
 | Term | Definition |
 |------|------------|
-| **Human User** | The person using TMWTTY and approving or modifying prompts. |
+| **Human User** | The person using TWTTY and approving or modifying prompts. |
 | **AI Agent** | The AI execution agent used by the project that proposes the next prompt and executes approved prompts. |
 | **Project** | The specific body of work organized under one Project Seed and the `seed/`, `spec/`, `plan/`, and `replay-execution/` folders in `<project-folder>/`. |
 | **Stage** | One of the four ordered lifecycle phases: SEED, SPEC, PLAN, EXECUTE. |
@@ -111,16 +111,16 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 | **Execute** | The stage where work is performed, validated, and iterated. |
 | **Replay-Execution Log** | A markdown file capturing every approved prompt and result from the project, including user modifications where applicable. Acts as both project history and a reference template for similar future work. See [Limitations](#10-limitations) for caveats on direct replay. Saved in `<project-folder>/replay-execution/replay-execution.md`. |
 | **Agent Role** | A specialized AI responsibility used in execution (for example, Spec Agent or Implementation Agent). For lower-risk projects, a single AI Agent may perform multiple Agent Roles sequentially. For higher-risk projects, Agent Roles are executed in isolated subagent contexts (see [Section 8](#8-risk-calibration)). |
-| **Domain Tmwtty Specification** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active domain spec is selected from `tmwtty/methodology/domain-specific-implementations/sdlc.md`. |
+| **Domain-specific implementation** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active implementation is selected from `twtty/methodology/domain-specific-implementations/sdlc.md`. |
 | **Risk level** | A 1–5 calibration of the project's risk profile that determines how much process the pipeline enforces. See [Section 8](#8-risk-calibration). |
 
-Domain-specific terms (for example, software-delivery terms) are defined in each Domain Tmwtty Specification template.
+Domain-specific terms (for example, software-delivery terms) are defined in each domain-specific implementation.
 
 ---
 
 ## 3. How it works
 
-The operational mechanism of TMWTTY is an interaction loop repeated inside every stage.
+The operational mechanism of TWTTY is an interaction loop repeated inside every stage.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -163,7 +163,7 @@ Each Release Scope after the baseline release MUST proceed through SPEC -> PLAN 
 
 ### Approval options
 
-In Step 2 of the TMWTTY interaction loop, the Human User has three allowed responses:
+In Step 2 of the TWTTY interaction loop, the Human User has three allowed responses:
 
 | Response | Effect |
 |----------|--------|
@@ -177,19 +177,19 @@ The risk calibration (see [Section 8](#8-risk-calibration)) determines whether f
 
 ## 4. Interaction protocols
 
-TMWTTY uses two distinct interaction protocols depending on what the AI needs from the user.
+TWTTY uses two distinct interaction protocols depending on what the AI needs from the user.
 
 ### 4.1 Interview Me
 
 Used by the **discovery Agent Role** at the start of a project.
 
-The discovery Agent Role has no prior knowledge of what the Human User wants to build. It conducts a structured interview by asking targeted questions to elicit goals, constraints, edge cases, and acceptance criteria. After discovery is complete, execution continues through the standard TMWTTY loop.
+The discovery Agent Role has no prior knowledge of what the Human User wants to build. It conducts a structured interview by asking targeted questions to elicit goals, constraints, edge cases, and acceptance criteria. After discovery is complete, execution continues through the standard TWTTY loop.
 
 > **Note:** The discovery Agent Role should propose sensible defaults when the Human User lacks domain expertise. Pure interviewing without informed challenge risks weak requirements.
 
-The interview protocol runs once per project during initial discovery, unless a later Release Scope requires additional discovery. Subsequent stages use the standard TMWTTY loop (propose and write prompt -> approve/modify -> execute -> review -> record).
+The interview protocol runs once per project during initial discovery, unless a later Release Scope requires additional discovery. Subsequent stages use the standard TWTTY loop (propose and write prompt -> approve/modify -> execute -> review -> record).
 
-### 4.2 TMWTTY loop
+### 4.2 TWTTY loop
 
 Used by **every non-discovery Agent Role** in the pipeline. These Agent Roles bring domain-specific expertise to their assigned responsibilities. Rather than interviewing the Human User, they propose the next artifact, write the prompt, execute on approval (or after incorporating modifications), and record the result.
 
@@ -197,15 +197,15 @@ Used by **every non-discovery Agent Role** in the pipeline. These Agent Roles br
 
 ## 5. Repository layout
 
-Folder Structure for TMWTTY repository
+Folder Structure for TWTTY repository
 
 | Path | Purpose |
 |------|---------|
-| `tmwtty/` | The methodology reference (this document). |
+| `twtty/` | The methodology reference (this document). |
 | `<project-folder>/` | Project root for one specific project (create new for a new project; reuse if it already exists). |
 | `<project-folder>/seed/seed.md` | The project seed expressing project-level intent. |
-| `<project-folder>/spec/spec.md` | The canonical baseline spec for the active Domain Tmwtty Specification. Additional spec documents and incremental spec entries MAY be stored under `<project-folder>/spec/` as needed. |
-| `<project-folder>/plan/plan.md` | The canonical top-level plan for the active Domain Tmwtty Specification. Additional plan documents and incremental plan artifacts MAY be stored under `<project-folder>/plan/` as needed. |
+| `<project-folder>/spec/spec.md` | The canonical baseline spec for the active domain-specific implementation. Additional spec documents and incremental spec entries MAY be stored under `<project-folder>/spec/` as needed. |
+| `<project-folder>/plan/plan.md` | The canonical top-level plan for the active domain-specific implementation. Additional plan documents and incremental plan artifacts MAY be stored under `<project-folder>/plan/` as needed. |
 | `<project-folder>/replay-execution/replay-execution.md` | The step-by-step playbook captured during execution. |
 
 Rule: each `<project-folder>` has exactly one project seed at `<project-folder>/seed/seed.md`.
@@ -230,11 +230,11 @@ inventory-management/
 
 ## 6. Runtime
 
-TMWTTY runs in **GitHub Copilot** — either of two runtimes plays the agent roles:
+TWTTY runs in **GitHub Copilot** — either of two runtimes plays the agent roles:
 
 | Runtime | Recommended for | Notes |
 |---------|-----------------|-------|
-| **VS Code Agent mode** | Code-heavy projects (recommended default) | Inline diffs, collapsible subagent panels, visual approval gates make the TMWTTY loop feel natural |
+| **VS Code Agent mode** | Code-heavy projects (recommended default) | Inline diffs, collapsible subagent panels, visual approval gates make the TWTTY loop feel natural |
 | **Copilot CLI** | Ops, runbooks, headless or remote environments | Terminal-native; better for scripting and CI |
 
 Each agent in the pipeline is a role played by the chosen runtime. Both runtimes support the same set of modes and features described below.
@@ -245,20 +245,20 @@ Each agent in the pipeline is a role played by the chosen runtime. Both runtimes
 
 The Planning Agent selects the appropriate mode for each stage task.
 
-| Mode | Description | TMWTTY usage |
+| Mode | Description | TWTTY usage |
 |------|-------------|--------------|
-| **Interactive** *(default)* | The user explicitly approves each tool action. | The default for every stage. Implements the TMWTTY loop. |
+| **Interactive** *(default)* | The user explicitly approves each tool action. | The default for every stage. Implements the TWTTY loop. |
 | **Autopilot** | The agent runs fully autonomously without approval prompts. | Used when the spec is precise and the work is low risk. |
 | **Plan** | The agent generates a multi-step plan, waits for user approval, then executes. | Used during the Plan stage. |
 | **Fleet** (`/fleet`) | The agent decomposes work into parallel subtasks executed by subagents. | Used when work items are independent and can run concurrently. |
 
 ### 6.2 Features
 
-| Feature | Command / Location | TMWTTY usage |
+| Feature | Command / Location | TWTTY usage |
 |---------|--------------------|--------------|
 | **Custom Agents** | `.github/agents/<name>.md` | Each pipeline role is defined as a persistent custom agent with focused instructions, tools, and optional model selection. |
 | **Skills** | Per-agent skill declarations | Atomic actions (run tests, open PR, scan dependencies, generate docs, etc.). Agents declare which actions they need; the runtime invokes them when appropriate. Custom skills can be added per project. |
-| **AGENTS.md** | Repository root | Project-wide instructions that all agents read. Used to encode TMWTTY conventions, workflow standards, and project context. |
+| **AGENTS.md** | Repository root | Project-wide instructions that all agents read. Used to encode TWTTY conventions, workflow standards, and project context. |
 | **GitHub Issues** | Repository issue tracker | Work management backbone for Execute: each non-trivial work item is tracked as an issue, then implemented through branch and PR flow. |
 | **Subagents** | Auto-spawned or `/agent <name>` | Isolated-context agents for specialized subtasks. Required for risk levels 4–5. |
 | **Delegate** | `/delegate` | Hands off a fully specified work item to the GitHub Copilot Coding Agent (cloud, async) for issue-to-PR execution. |
@@ -268,7 +268,7 @@ The Planning Agent selects the appropriate mode for each stage task.
 
 ## 7. Guardrails
 
-During the Plan stage, the Planning Agent guides the user through establishing industry-standard guardrails appropriate to the project. Guardrails are **negotiated, not prescribed** — they are determined through the TMWTTY loop based on the project's scope, technology stack, and [risk level](#8-risk-calibration).
+During the Plan stage, the Planning Agent guides the user through establishing industry-standard guardrails appropriate to the project. Guardrails are **negotiated, not prescribed** — they are determined through the TWTTY loop based on the project's scope, technology stack, and [risk level](#8-risk-calibration).
 
 | Category | Examples |
 |----------|----------|
@@ -282,7 +282,7 @@ During the Plan stage, the Planning Agent guides the user through establishing i
 
 ## 8. Risk calibration
 
-The TMWTTY pipeline scales with the project's risk profile. The Planning Agent assesses risk on a 1–5 scale and adjusts the depth of process accordingly.
+The TWTTY pipeline scales with the project's risk profile. The Planning Agent assesses risk on a 1–5 scale and adjusts the depth of process accordingly.
 
 | Level | Profile | Pipeline behavior |
 |:-----:|---------|-------------------|
@@ -313,7 +313,7 @@ Every abandon and escalate event is recorded in `<project-folder>/replay-executi
 
 ## 10. Limitations
 
-TMWTTY is not a silver bullet. Users should understand the following constraints.
+TWTTY is not a silver bullet. Users should understand the following constraints.
 
 | Constraint | Explanation |
 |------------|-------------|
@@ -328,7 +328,7 @@ TMWTTY is not a silver bullet. Users should understand the following constraints
 
 ## 11. Agent protocol
 
-> This section provides operating instructions for AI agents executing TMWTTY. Human readers can skip to [Section 12](#12-reference).
+> This section provides operating instructions for AI agents executing TWTTY. Human readers can skip to [Section 12](#12-reference).
 
 ### 11.1 On first contact
 
@@ -344,18 +344,18 @@ TMWTTY is not a silver bullet. Users should understand the following constraints
 1. Announce which agent role you are playing and which stage or stage task you are entering.
 2. Use the agent's assigned protocol:
   - **Discovery Agent Role** → Interview Me (elicit requirements; propose defaults when the user lacks expertise).
-  - **All non-discovery agents** → TMWTTY loop (propose + write prompt, approve/modify, execute, review, record).
+  - **All non-discovery agents** → TWTTY loop (propose + write prompt, approve/modify, execute, review, record).
 3. Produce the defined artifact for the stage task.
 4. Wait for explicit human approval at each gate before advancing.
 5. Each stage is informed by the prior stage — do not skip ahead.
-6. Map the same TMWTTY loop to the active domain's equivalent stages and artifacts.
+6. Map the same TWTTY loop to the active domain's equivalent stages and artifacts.
 
-### 11.3 The TMWTTY loop
+### 11.3 The TWTTY loop
 
 | Step | Action |
 |:----:|--------|
 | 1 | Explain the concept — what you are about to do and why. |
-| 2 | Propose the next artifact for the active Domain Tmwtty Specification and write the prompt to execute it. |
+| 2 | Propose the next artifact for the active domain-specific implementation and write the prompt to execute it. |
 | 3 | Wait for the user to approve, modify, or reject. If **"go"** and fast-path is allowed, proceed immediately. If modifications are provided, incorporate them. |
 | 4 | Execute. |
 | 5 | Present the result for review. |
@@ -391,10 +391,10 @@ Follow the table in [Section 9](#9-failure-handling). Never proceed on assumptio
 
 ---
 
-## 13. Applying TMWTTY to a Domain Tmwtty Specification
+## 13. Applying TWTTY to a Domain-Specific Implementation
 
-Domain Tmwtty Specifications are maintained as dedicated specifications. An SDLC Tmwtty Specification is available at:
+Domain-specific implementations are maintained as dedicated methodology companions. An SDLC implementation is available at:
 
 - [domain-specific-implementations/sdlc.md](domain-specific-implementations/sdlc.md)
 
-This keeps the Core Twitty Specification separate from domain-specific implementations.
+This keeps the Core TWTTY Specification separate from domain-specific implementations.

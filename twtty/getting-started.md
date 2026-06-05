@@ -1,4 +1,4 @@
-# 📘 Getting Started with TMWTTY
+# 📘 Getting Started with TWTTY
 
 ---
 
@@ -15,7 +15,6 @@ Inside it, create:
 ```text
 inventory-management/
 	seed/
-	domain-profile/
 	spec/
 	plan/
 	replay-execution/
@@ -32,9 +31,9 @@ Use [`templates/seed-prompt-template.md`](./templates/seed-prompt-template.md) a
 
 ---
 
-## Step 2.5 — Choose Your Domain Tmwtty Specification
+## Step 2.5 — Choose Your Domain-Specific Implementation
 
-Choose the Domain Tmwtty Specification template the project will use.
+Choose the domain-specific implementation the project will use.
 
 Default example:
 - [`methodology/domain-specific-implementations/sdlc.md`](./methodology/domain-specific-implementations/sdlc.md)
@@ -44,11 +43,11 @@ Default example:
 ## Step 3 — Give It To Your AI Agent
 
 Give this prompt to your AI Agent.
-> Read `tmwtty/methodology/core-tmwtty-methodology.md` and follow the TMWTTY methodology.
+> Read `twtty/methodology/core-twtty-methodology.md` and follow the TWTTY methodology.
 >
 > Project seed: `<project-folder>/seed/seed.md`
 >
-> Active Domain Tmwtty Specification: `tmwtty/methodology/domain-specific-implementations/sdlc.md` (example)
+> Active domain-specific implementation: `twtty/methodology/domain-specific-implementations/sdlc.md` (example)
 
 You're off to the races.
 
@@ -58,6 +57,6 @@ You're off to the races.
 
 | File | Purpose |
 |------|---------|
-| [`methodology/core-tmwtty-methodology.md`](./methodology/core-tmwtty-methodology.md) | The methodology — what the agent reads |
-| [`templates/seed-prompt-template.md`](../templates/seed-prompt-template.md) | Example template — use to create `<project-folder>/seed/seed.md` |
-| [`methodology/domain-specific-implementations/sdlc.md`](./methodology/domain-specific-implementations/sdlc.md) | Example Domain Tmwtty Specification — use as the active domain spec input |
+| [`methodology/core-twtty-methodology.md`](./methodology/core-twtty-methodology.md) | The methodology — what the agent reads |
+| [`templates/seed-prompt-template.md`](./templates/seed-prompt-template.md) | Example template — use to create `<project-folder>/seed/seed.md` |
+| [`methodology/domain-specific-implementations/sdlc.md`](./methodology/domain-specific-implementations/sdlc.md) | Example domain-specific implementation — use as the active implementation input |

@@ -134,7 +134,7 @@ During the Plan stage, the team identified that Use Cases (2a) were placed *afte
 
 | File | Change |
 |------|--------|
-| `tmwtty/00-tmwtty-methodology.md` | Restructured Spec stage: 1a Interview → 1b BRD → 1c Use Cases → 1d Tech Spec. Removed Use Cases from Plan stage. Renumbered Plan to 2a–2c. Cleaned up all diagrams to consistent style. |
+| `twtty/methodology/core-twtty-methodology.md` | Restructured Spec stage: 1a Interview → 1b BRD → 1c Use Cases → 1d Tech Spec. Removed Use Cases from Plan stage. Renumbered Plan to 2a–2c. Cleaned up all diagrams to consistent style. |
 | `plan/spec.md` | Reorganized into BRD (1b) + Use Cases (1c) + Technical Spec (1d) with FR/AC traceability to UCs. |
 | `plan/plan.md` | Removed Use Cases section. Renumbered: Architecture (2a), Design (2b), Orchestration (2c). |
 | `.github/agents/spec-agent.md` | Updated to produce 4 sub-steps (1a–1d) with BRD and Use Cases before Tech Spec. |

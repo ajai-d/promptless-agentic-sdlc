@@ -1,14 +1,14 @@
-# SDLC Tmwtty Specification
+# SDLC Domain-Specific Implementation
 
 ## Purpose
 
-This template is a concrete Software Development Life Cycle (SDLC) Domain Tmwtty Specification that applies the Core Twitty Specification.
+This document is a concrete Software Development Life Cycle (SDLC) domain-specific implementation of the Core TWTTY Specification.
 
-Core Twitty Specification:
+Core TWTTY Specification:
 
 SEED -> SPEC -> PLAN -> EXECUTE
 
-In this profile, Execute includes delivery and operations.
+In this implementation, Execute includes delivery and operations.
 
 ---
 
@@ -17,7 +17,7 @@ In this profile, Execute includes delivery and operations.
 The authoritative SDLC execution order is listed in SDLC stage details below.
 
 ```text
-                          TMWTTY Agentic SDLC Pipeline
+                          TWTTY Agentic SDLC Pipeline
 
     SEED ─────▶ SPEC ─────▶ PLAN ─────────────────────────────▶ EXECUTE
    Intent    Requirements  Build Strategy      Build + Validate + Deploy + Operate
