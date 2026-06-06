@@ -18,19 +18,19 @@ This document is the canonical and normative Core TWTTY Specification for AI age
 
 | Section | Purpose |
 |---------|---------|
-| [Overview](#1-overview) | What TWTTY is and the problems it solves |
-| [Normative Keywords And Consistency Rules](#normative-keywords-and-consistency-rules) | Normative term usage and mandatory execution consistency rules |
-| [Core concepts](#2-core-concepts) | Key terms used throughout the methodology |
-| [How it works](#3-how-it-works) | The TWTTY loop explained step by step |
-| [Interaction protocols](#4-interaction-protocols) | Interview Me and the TWTTY loop |
-| [Repository layout](#5-repository-layout) | Required folders and files |
-| [Runtime](#6-runtime) | Runtime guidance is owned by the active domain-specific implementation |
-| [Guardrails](#7-guardrails) | Guardrails are owned by the active domain-specific implementation |
-| [Risk calibration](#8-risk-calibration) | How the pipeline adapts to project risk |
-| [Failure handling](#9-failure-handling) | Retry, abandon, and escalation semantics |
-| [Limitations](#10-limitations) | Honest constraints of the methodology |
-| [Agent protocol](#11-agent-protocol) | Operating instructions for AI agents |
-| [Reference](#12-reference) | Related documents |
+| [1. Overview](#1-overview) | What TWTTY is and the problems it solves |
+| &nbsp;&nbsp;&nbsp;&nbsp;[Normative Keywords And Consistency Rules](#normative-keywords-and-consistency-rules) | Normative term usage and mandatory execution consistency rules |
+| [2. Core concepts](#2-core-concepts) | Key terms used throughout the methodology |
+| [3. How it works](#3-how-it-works) | The TWTTY loop explained step by step |
+| [4. Interaction protocols](#4-interaction-protocols) | Interview Me and the TWTTY loop |
+| [5. Repository layout](#5-repository-layout) | Required folders and files |
+| [6. Runtime](#6-runtime) | Runtime guidance is owned by the active domain-specific implementation |
+| [7. Guardrails](#7-guardrails) | Guardrails are owned by the active domain-specific implementation |
+| [8. Risk calibration](#8-risk-calibration) | How the pipeline adapts to project risk |
+| [9. Failure handling](#9-failure-handling) | Retry, abandon, and escalation semantics |
+| [10. Limitations](#10-limitations) | Honest constraints of the methodology |
+| [11. Agent protocol](#11-agent-protocol) | Operating instructions for AI agents |
+| [12. Reference](#12-reference) | Related documents |
 
 ---
 
