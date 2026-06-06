@@ -55,7 +55,10 @@ The authoritative SDLC execution order is listed in [Section 3 — Stage and sta
   | seed.md   | spec/spec-R2.md          | plan/plan-R2.md      | .github/ (see Artifact locations)    |
   |           | spec/spec-R3.md  ...     | plan/plan-R3.md  ... |                                      |
   +-----------+--------------------------+----------------------+--------------------------------------+
-  | replay-execution/replay-execution.md (appended throughout all stages and releases)                 |
+  | replay-execution/ (appended throughout all stages and releases)                                    |
+  |   replay-execution.md                                              (single-file layout, default)   |
+  |   - or -                                                                                           |
+  |   replay-execution-<period>.md  ...                                (chunked layout, optional)      |
   +----------------------------------------------------------------------------------------------------+
                                                                                   │
                               ◀──── Feedback loop ── next release ────────────────┘

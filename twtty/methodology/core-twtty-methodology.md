@@ -224,7 +224,10 @@ The following diagram shows the canonical mapping from stages to output artifact
   | seed.md   | spec/spec-R2.md         | plan/plan-R2.md         | (per active domain-      |
   |           | spec/spec-R3.md  ...    | plan/plan-R3.md  ...    | specific implementation) |
   +-----------+-------------------------+-------------------------+--------------------------+
-  | replay-execution/replay-execution.md (appended throughout all stages and releases)      |
+  | replay-execution/ (appended throughout all stages and releases)                         |
+  |   replay-execution.md                                  (single-file layout, default)    |
+  |   - or -                                                                                |
+  |   replay-execution-<period>.md  ...                    (chunked layout, optional)       |
   +-----------------------------------------------------------------------------------------+
                                                                               │
                               ◀──── Feedback loop ── next release ────────────┘
@@ -232,7 +235,7 @@ The following diagram shows the canonical mapping from stages to output artifact
 
 ### Example tree
 
-Example for a project named `inventory-management` with a baseline release and one subsequent Release Scope (`R2`):
+Example for a project named `inventory-management` with a baseline release and one subsequent Release Scope (`R2`), using the default single-file replay-execution layout:
 
 ```text
 inventory-management/
@@ -246,6 +249,24 @@ inventory-management/
     plan-R2.md
   replay-execution/
     replay-execution.md
+```
+
+The same project using the optional chunked replay-execution layout (monthly granularity shown):
+
+```text
+inventory-management/
+  seed/
+    seed.md
+  spec/
+    spec.md
+    spec-R2.md
+  plan/
+    plan.md
+    plan-R2.md
+  replay-execution/
+    replay-execution-2026-04.md
+    replay-execution-2026-05.md
+    replay-execution-2026-06.md
 ```
 
 ### Replay-execution log format
