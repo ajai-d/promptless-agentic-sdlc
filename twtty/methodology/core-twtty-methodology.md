@@ -241,6 +241,8 @@ The replay-execution log is a single markdown file containing one `###` section 
 
 Entries MUST appear in monotonically increasing `<sequence-id>` order. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
 
+The `<approval-gate-name>` field MUST contain the gate name when the entry corresponds to an Approval Gate event (stage exit or stage task gate); otherwise it MUST be `—` (em dash).
+
 ---
 
 ## 6. Runtime
@@ -342,7 +344,7 @@ For each subsequent Release Scope, the AI Agent MUST create a new release-scoped
 | 2 | Wait for the user to approve, modify, or reject. If modifications are provided, incorporate them. |
 | 3 | Execute. |
 | 4 | Present the result for review. |
-| 5 | On approval, write the produced artifact to its canonical location under `<project-folder>/<stage>/` (see [Section 5](#5-repository-layout)), then append an entry for the approved prompt and result to `<project-folder>/replay-execution/replay-execution.md`. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
+| 5 | On approval, write the produced artifact to its canonical location, then append an entry for the approved prompt and result to `<project-folder>/replay-execution/replay-execution.md`. For SEED, SPEC, and PLAN, the canonical location is `<project-folder>/<stage>/` (see [Section 5](#5-repository-layout)). For EXECUTE, the canonical location is defined by the active domain-specific implementation. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
 
 Repeat for every stage task until the pipeline is complete.
 
