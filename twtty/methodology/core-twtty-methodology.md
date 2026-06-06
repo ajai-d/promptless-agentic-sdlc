@@ -85,7 +85,7 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 1. Agents MUST use canonical TWTTY stage and Approval Gate names as defined in this spec.
 2. Agents MUST execute stages in order: SEED -> SPEC -> PLAN -> EXECUTE.
 3. Agents MUST NOT skip Approval Gates when a gate is defined. Each gate requires explicit human approval.
-4. Agents MUST record every approved prompt and result in the replay-execution log, including at minimum: stage/stage task, Approval Gate name, approval outcome, approved prompt, execution outcome, artifact/path changed, and timestamp or sequence ID.
+4. Agents MUST record every approved prompt and result in the replay-execution log using the entry format defined in [Section 5 — Replay-execution log format](#replay-execution-log-format). At minimum each entry MUST include: stage/stage task, Approval Gate name, approval outcome, approved prompt, execution outcome, artifact/path changed, and timestamp or sequence ID.
 5. Agents SHOULD prefer stable, explicit prompts over stylistic variation.
 6. Agents SHOULD avoid introducing synonyms for stage, gate, and artifact names.
 7. Agents MAY optimize implementation details only when they do not alter approved intent, gate outcomes, or traceability requirements.
@@ -152,10 +152,6 @@ Each stage has a stage exit Approval Gate that controls progression to the next 
 | **Plan** | Execution strategy and sequencing are approved. |
 | **Execute** | Outcomes meet the approved criteria, are documented, and are ready for iteration or closure. |
 
-For enhancements after the baseline release, the AI Agent MUST collaborate with the Human User to establish the active Release Scope and its release spec, and MUST record the incremental spec entry in one or more spec documents before entering PLAN for that scope.
-
-Each Release Scope after the baseline release MUST proceed through SPEC -> PLAN -> EXECUTE under the existing Project Seed.
-
 ### Approval options
 
 In Step 2 of the TWTTY interaction loop, the Human User has three allowed responses:
@@ -197,8 +193,10 @@ Folder structure for the TWTTY repository
 | `twtty/` | The methodology reference set, including this document. |
 | `<project-folder>/` | Project root for one specific project (create new for a new project; reuse if it already exists). |
 | `<project-folder>/seed/seed.md` | The project seed expressing project-level intent. |
-| `<project-folder>/spec/spec.md` | The canonical baseline spec for the active domain-specific implementation. Additional spec documents and incremental spec entries MAY be stored under `<project-folder>/spec/` as needed. |
-| `<project-folder>/plan/plan.md` | The canonical top-level plan for the active domain-specific implementation. Additional plan documents and incremental plan artifacts MAY be stored under `<project-folder>/plan/` as needed. |
+| `<project-folder>/spec/spec.md` | The canonical baseline spec for the active domain-specific implementation. |
+| `<project-folder>/spec/spec-<release-id>.md` | A release-scoped spec for each Release Scope after the baseline (for example, `spec-R2.md`). |
+| `<project-folder>/plan/plan.md` | The canonical top-level plan for the active domain-specific implementation. |
+| `<project-folder>/plan/plan-<release-id>.md` | A release-scoped plan for each Release Scope after the baseline (for example, `plan-R2.md`). |
 | `<project-folder>/replay-execution/replay-execution.md` | The step-by-step playbook captured during execution. |
 
 Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`.
@@ -218,6 +216,28 @@ inventory-management/
   replay-execution/
     replay-execution.md
 ```
+
+### Replay-execution log format
+
+The replay-execution log is a single markdown file containing one `###` section per recorded entry, in append order. Each entry MUST include the following fields:
+
+````markdown
+### <sequence-id> · <stage>/<stage-task> · <approval-gate-name>
+
+- **Timestamp:** <ISO-8601>
+- **Approval outcome:** Approved | Approved with changes | Reject | Abandon | Escalate
+- **Approved prompt:**
+
+  ```
+  <verbatim prompt as executed>
+  ```
+
+- **Execution outcome:** <one-line summary>
+- **Artifact / path changed:** `<path>` (one per line if multiple)
+- **Notes:** <optional rationale, especially for Abandon or Escalate>
+````
+
+Entries MUST appear in monotonically increasing `<sequence-id>` order. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
 
 ---
 
@@ -261,10 +281,10 @@ The methodology defines explicit semantics for when things go wrong.
 
 | State | Trigger | Response |
 |-------|---------|----------|
-| **Retry** | A stage task fails on first attempt (transient error, simple mistake). | Agent retries with an adjusted approach; if it continues to fail, treats it as Refine or Escalate. |
+| **Retry** | A stage task fails on first attempt (transient error, simple mistake). | Agent retries once with an adjusted approach. If the retry also fails, escalate. |
 | **Refine** | User responds "Reject" to a proposed prompt (step 2) or to a presented result (step 4). | Agent revises based on user feedback, then re-proposes. Maximum three refinement cycles per artifact. |
 | **Abandon** | Three refinement cycles fail to converge, or the user explicitly says "abandon this approach." | Agent records the failure in the replay-execution log, returns to the prior approved artifact, and asks the user how to proceed. |
-| **Escalate** | The agent detects ambiguity it cannot resolve or a risk-level mismatch. | Agent halts, surfaces the issue clearly, and waits for human direction. Never proceeds on assumption. |
+| **Escalate** | The agent detects ambiguity it cannot resolve, a retry that also failed, or a risk-level mismatch (the runtime cannot satisfy the enforcement profile required for the confirmed risk level — for example, isolated contexts unavailable when the implementation requires them). | Agent halts, surfaces the issue clearly, and waits for human direction. Never proceeds on assumption. |
 
 Every abandon and escalate event is recorded in `<project-folder>/replay-execution/replay-execution.md` with rationale, supporting future learning and process refinement.
 
@@ -296,10 +316,13 @@ TWTTY is not a silver bullet. Users should understand the following constraints.
 3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. If it does not exist, draft it from the user's intent and obtain explicit Human User approval before proceeding. The approved seed satisfies the Seed stage Approval Gate.
 4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user.
 5. Calibrate the pipeline (which stage tasks apply) based on the confirmed risk level.
+6. Proceed to SPEC by entering the discovery interview (see [Section 4.1](#41-interview-me)).
 
 ### 11.2 On subsequent runs
 
 Subsequent releases go through only SPEC → PLAN → EXECUTE, beginning with the discovery interview. Confirm the active release ID with the user before starting.
+
+For each subsequent Release Scope, the AI Agent MUST create a new release-scoped spec document at `<project-folder>/spec/spec-<release-id>.md` (for example, `spec-R2.md`) and a new release-scoped plan document at `<project-folder>/plan/plan-<release-id>.md`. The baseline `spec.md` and `plan.md` MUST NOT be overwritten.
 
 ### 11.3 For each stage and stage task
 
@@ -318,7 +341,7 @@ Subsequent releases go through only SPEC → PLAN → EXECUTE, beginning with th
 | 2 | Wait for the user to approve, modify, or reject. If modifications are provided, incorporate them. |
 | 3 | Execute. |
 | 4 | Present the result for review. |
-| 5 | On approval, record the approved prompt and result in `<project-folder>/replay-execution/replay-execution.md`. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
+| 5 | On approval, write the produced artifact to its canonical location under `<project-folder>/<stage>/` (see [Section 5](#5-repository-layout)), then append an entry for the approved prompt and result to `<project-folder>/replay-execution/replay-execution.md`. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
 
 Repeat for every stage task until the pipeline is complete.
 
