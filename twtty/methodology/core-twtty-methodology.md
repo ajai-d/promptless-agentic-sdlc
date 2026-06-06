@@ -107,7 +107,7 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 | **Spec** | A set of requirements, constraints, and acceptance criteria for the project or active Release Scope. The canonical baseline spec is saved in `<project-folder>/spec/spec.md`. Each subsequent Release Scope MUST have its own release-scoped spec at `<project-folder>/spec/spec-<release-id>.md` (see [Section 11.3](#113-on-new-release-scope)). |
 | **Plan** | A set of execution strategies, work breakdown, and sequencing decisions for the project or active Release Scope. The canonical top-level plan is saved in `<project-folder>/plan/plan.md`. Each subsequent Release Scope MUST have its own release-scoped plan at `<project-folder>/plan/plan-<release-id>.md` (see [Section 11.3](#113-on-new-release-scope)). |
 | **Execute** | The stage where work is performed, validated, and iterated. |
-| **Replay-Execution Log** | A markdown file capturing every approved prompt and result across all stages and releases, including user modifications where applicable. Acts as both project history and a reference template for similar future work. See [Limitations](#10-limitations) for caveats on direct replay. Saved in `<project-folder>/replay-execution/replay-execution.md`. |
+| **Replay-Execution Log** | A markdown log capturing every approved prompt and result across all stages and releases, including user modifications where applicable. Acts as both project history and a reference template for similar future work. See [Limitations](#10-limitations) for caveats on direct replay. The default location is a single file at `<project-folder>/replay-execution/replay-execution.md`; the log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/` per [Section 5 — Replay-execution log format](#replay-execution-log-format). |
 | **Agent Role** | A specialized AI responsibility used in execution (for example, Spec Agent or Implementation Agent). Whether Agent Roles share a single AI context or run in isolated contexts is determined by the active domain-specific implementation and the project's risk level (see [Section 8](#8-risk-calibration)). |
 | **Domain-specific implementation** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active implementation is selected from `twtty/methodology/domain-specific-implementations/<implementation>.md` (for example, `twtty/methodology/domain-specific-implementations/sdlc.md`). |
 | **Risk level** | A 1–5 calibration of the project's risk profile that determines how much process the pipeline enforces. See [Section 8](#8-risk-calibration). |
@@ -201,7 +201,7 @@ Folder structure for the TWTTY repository
 | `<project-folder>/spec/spec-<release-id>.md` | A release-scoped spec for each Release Scope after the baseline (for example, `spec-R2.md`). |
 | `<project-folder>/plan/plan.md` | The canonical top-level plan for the active domain-specific implementation. |
 | `<project-folder>/plan/plan-<release-id>.md` | A release-scoped plan for each Release Scope after the baseline (for example, `plan-R2.md`). |
-| `<project-folder>/replay-execution/replay-execution.md` | The replay-execution log capturing every approved prompt and result across all stages and releases. |
+| `<project-folder>/replay-execution/replay-execution.md` | The replay-execution log capturing every approved prompt and result across all stages and releases. MAY be chunked into multiple time-period files under the same folder; see [Section 5 — Replay-execution log format](#replay-execution-log-format). |
 
 Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`.
 
@@ -250,7 +250,7 @@ inventory-management/
 
 ### Replay-execution log format
 
-The replay-execution log is a single markdown file containing one `###` section per recorded entry, in append order. Each entry MUST include the following fields:
+The replay-execution log is markdown content stored under `<project-folder>/replay-execution/` and containing one `###` section per recorded entry, in append order. Each entry MUST include the following fields:
 
 ````markdown
 ### <sequence-id> · <stage>/<stage-task> · <approval-gate-name>
@@ -268,11 +268,20 @@ The replay-execution log is a single markdown file containing one `###` section 
 - **Notes:** <rationale; REQUIRED when Approval outcome is `Abandon` or `Escalate`; optional otherwise>
 ````
 
-Entries MUST appear in monotonically increasing `<sequence-id>` order. The `<sequence-id>` MUST be a zero-padded integer of at least three digits (for example, `001`, `002`, ..., `010`, ..., `100`) so that entries sort lexicographically. Timestamps MUST be UTC ISO-8601 so resume and audit operations are deterministic across contributors and time zones. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
+Entries MUST appear in monotonically increasing `<sequence-id>` order. The `<sequence-id>` MUST be a zero-padded integer of at least three digits (for example, `001`, `002`, ..., `010`, ..., `100`) so that entries sort lexicographically. Timestamps MUST be UTC ISO-8601 so resume and audit operations are deterministic across contributors and time zones.
 
 Only outcomes that change project state are logged: `Approved`, `Approved with changes`, `Abandon`, and `Escalate`. `Reject` responses during a Refine cycle ([Section 9](#9-failure-handling)) MUST NOT produce log entries; only the eventual approved result (or the terminal `Abandon` / `Escalate`) is recorded.
 
 The `<approval-gate-name>` field MUST contain the gate name when the entry corresponds to an Approval Gate event (stage exit or stage task gate); otherwise it MUST be `—` (em dash).
+
+#### Storage layout
+
+The log MAY be stored as either a single file or as multiple time-period chunk files. Both layouts MUST satisfy the rules above.
+
+- **Single-file layout (default).** The entire log lives in `<project-folder>/replay-execution/replay-execution.md`. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
+- **Chunked layout (optional).** The log is split across multiple files in `<project-folder>/replay-execution/`, each covering one time period. Chunk files MUST be named `replay-execution-<period>.md` where `<period>` is one of: `YYYY` (yearly), `YYYY-Qn` (quarterly, `n` in 1-4), `YYYY-MM` (monthly), `YYYY-Www` (ISO week, `ww` zero-padded), or `YYYY-MM-DD` (daily). Exactly one period granularity MUST be used per project; mixing granularities is prohibited. Each chunk file MUST start with an `# H1` title that includes the period (for example, `# Replay-Execution Log — 2026-06`) and a one-line description; all subsequent content MUST be entry sections. Entries MUST be appended to the chunk file whose period contains the entry's timestamp. `<sequence-id>` values remain globally unique and monotonically increasing across all chunk files; they MUST NOT reset at chunk boundaries. The chosen period and start date MUST be recorded as the first entry in the first chunk (`Execution outcome: chunking enabled, granularity=<period>`); switching granularities later is prohibited without a new project.
+
+On resume ([Section 11.1](#111-on-resume)), the AI Agent MUST read every `replay-execution*.md` file in `<project-folder>/replay-execution/` in lexicographic filename order and treat their concatenation as the authoritative log. The naming conventions above guarantee that lexicographic filename order matches chronological order.
 
 ---
 
@@ -321,7 +330,7 @@ The methodology defines explicit semantics for when things go wrong.
 | **Abandon** | Three refinement cycles fail to converge, or the user explicitly says "abandon this approach." | Agent records the failure in the replay-execution log, returns to the prior approved artifact, and asks the user how to proceed. |
 | **Escalate** | The agent detects ambiguity it cannot resolve, a retry that also failed, or a risk-level mismatch (the runtime cannot satisfy the enforcement profile required for the confirmed risk level — for example, isolated contexts unavailable when the implementation requires them). | Agent halts, surfaces the issue clearly, and waits for human direction. Never proceeds on assumption. |
 
-Every abandon and escalate event is recorded in `<project-folder>/replay-execution/replay-execution.md` with rationale, supporting future learning and process refinement.
+Every abandon and escalate event is recorded in the replay-execution log under `<project-folder>/replay-execution/` with rationale, supporting future learning and process refinement.
 
 ---
 
@@ -351,7 +360,7 @@ On every invocation, before proposing any action, the AI Agent MUST follow [11.1
 The AI Agent MUST be able to resume an in-progress project regardless of where the prior session stopped. The replay-execution log plus the existing stage artifacts are the authoritative sources for project state.
 
 1. Derive the candidate `<project-folder>` slug from the Human User's intent (or use one provided by the user). If the candidate folder does not exist, route to [11.2 On first contact](#112-on-first-contact).
-2. Read `<project-folder>/replay-execution/replay-execution.md` in full.
+2. Read the replay-execution log in full: every `replay-execution*.md` file in `<project-folder>/replay-execution/`, in lexicographic filename order, treated as a single concatenated log (see [Section 5 — Replay-execution log format](#replay-execution-log-format)).
 3. Read every existing stage artifact in `<project-folder>/`: `seed/seed.md`, all `spec/*.md`, all `plan/*.md`, and any EXECUTE artifacts (locations defined by the active domain-specific implementation).
 4. Reconcile log against artifacts. If a stage artifact exists with no corresponding log entry for its creation or update, the AI Agent MUST treat this as a drift condition and escalate per [Section 9](#9-failure-handling).
 5. Identify the most recent log entry by `<sequence-id>`. Determine the next action:
@@ -393,7 +402,7 @@ Only one Release Scope MAY be active at a time. The AI Agent MUST NOT start a ne
 | 2 | Wait for the user to approve, modify, or reject. If modifications are provided, incorporate them. |
 | 3 | Execute. |
 | 4 | Present the result for review. |
-| 5 | On approval, write the produced artifact to its canonical location, then append an entry for the approved prompt and result to `<project-folder>/replay-execution/replay-execution.md`. SEED, SPEC, and PLAN artifacts are written to `<project-folder>/seed/`, `<project-folder>/spec/`, and `<project-folder>/plan/` respectively (see [Section 5](#5-repository-layout)). EXECUTE artifacts are written to locations defined by the active domain-specific implementation. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
+5. On approval, write the produced artifact to its canonical location, then append an entry for the approved prompt and result to the replay-execution log under `<project-folder>/replay-execution/` (see [Section 5 — Replay-execution log format](#replay-execution-log-format) for single-file vs. chunked layout). SEED, SPEC, and PLAN artifacts are written to `<project-folder>/seed/`, `<project-folder>/spec/`, and `<project-folder>/plan/` respectively (see [Section 5](#5-repository-layout)). EXECUTE artifacts are written to locations defined by the active domain-specific implementation. If the runtime cannot write directly to the repository, return the produced changes to the Human User. |
 
 Repeat for every stage task until the pipeline is complete.
 
