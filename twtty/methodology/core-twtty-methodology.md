@@ -224,11 +224,11 @@ The following diagram shows the canonical mapping from stages to output artifact
   | seed.md   | spec/spec-R2.md         | plan/plan-R2.md         | (per active domain-      |
   |           | spec/spec-R3.md  ...    | plan/plan-R3.md  ...    | specific implementation) |
   +-----------+-------------------------+-------------------------+--------------------------+
-  | replay-execution/ (appended throughout all stages and releases)                         |
-  |   replay-execution.md                                  (single-file layout, default)    |
-  |   - or -                                                                                |
-  |   replay-execution-<period>.md  ...                    (chunked layout, optional)       |
-  +-----------------------------------------------------------------------------------------+
+  | replay-execution/ (appended throughout all stages and releases)                          |
+  |   replay-execution.md                                  (single-file layout, default)     |
+  |   - or -                                                                                 |
+  |   replay-execution-<period>.md  ...                    (chunked layout, optional)        |
+  +------------------------------------------------------------------------------------------+
                                                                               │
                               ◀──── Feedback loop ── next release ────────────┘
 ```
