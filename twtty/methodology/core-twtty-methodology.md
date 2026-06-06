@@ -24,8 +24,8 @@ This document is the canonical and normative Core TWTTY Specification for AI age
 | [How it works](#3-how-it-works) | The TWTTY loop explained step by step |
 | [Interaction protocols](#4-interaction-protocols) | Interview Me and the TWTTY loop |
 | [Repository layout](#5-repository-layout) | Required folders and files |
-| [Runtime](#6-runtime) | GitHub Copilot runtime modes and features |
-| [Guardrails](#7-guardrails) | Security, quality, and process boundaries |
+| [Runtime](#6-runtime) | Runtime guidance is owned by the active domain-specific implementation |
+| [Guardrails](#7-guardrails) | Guardrails are owned by the active domain-specific implementation |
 | [Risk calibration](#8-risk-calibration) | How the pipeline adapts to project risk |
 | [Failure handling](#9-failure-handling) | Retry, abandon, and escalation semantics |
 | [Limitations](#10-limitations) | Honest constraints of the methodology |
@@ -104,11 +104,11 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 | **Approval Gate** | A required approval checkpoint that controls progression; the Human User must approve or modify before the AI Agent continues. Stage exit Approval Gates control progression from one stage to the next; stage task Approval Gates control progression between stage tasks within a stage. |
 | **Project Seed** | The project-level statement of intent that establishes the long-lived project direction. Saved in `<project-folder>/seed/seed.md`. |
 | **Release Scope** | A bounded increment of project change, such as a release, enhancement, or additional feature, identified by a release ID (for example, R2). |
-| **Spec** | A set of requirements, constraints, and acceptance criteria for the project or active Release Scope. The spec may be captured in one document or multiple documents. In this methodology, the canonical baseline spec is saved in `<project-folder>/spec/spec.md`, with additional spec artifacts added as needed. |
-| **Plan** | A set of execution strategies, work breakdown, sequencing decisions, and definitions of who does what and in what order for the project or active Release Scope. The plan may be captured in one document or multiple documents. In this methodology, the canonical top-level plan is saved in `<project-folder>/plan/plan.md`, with additional plan artifacts added as needed. |
+| **Spec** | A set of requirements, constraints, and acceptance criteria for the project or active Release Scope. The canonical baseline spec is saved in `<project-folder>/spec/spec.md`. Each subsequent Release Scope MUST have its own release-scoped spec at `<project-folder>/spec/spec-<release-id>.md` (see [Section 11.2](#112-on-subsequent-runs)). |
+| **Plan** | A set of execution strategies, work breakdown, and sequencing decisions for the project or active Release Scope. The canonical top-level plan is saved in `<project-folder>/plan/plan.md`. Each subsequent Release Scope MUST have its own release-scoped plan at `<project-folder>/plan/plan-<release-id>.md` (see [Section 11.2](#112-on-subsequent-runs)). |
 | **Execute** | The stage where work is performed, validated, and iterated. |
 | **Replay-Execution Log** | A markdown file capturing every approved prompt and result from the project, including user modifications where applicable. Acts as both project history and a reference template for similar future work. See [Limitations](#10-limitations) for caveats on direct replay. Saved in `<project-folder>/replay-execution/replay-execution.md`. |
-| **Agent Role** | A specialized AI responsibility used in execution (for example, Spec Agent or Implementation Agent). For lower-risk projects, a single AI Agent may perform multiple Agent Roles sequentially. For higher-risk projects, Agent Roles are executed in isolated subagent contexts (see [Section 8](#8-risk-calibration)). |
+| **Agent Role** | A specialized AI responsibility used in execution (for example, Spec Agent or Implementation Agent). Whether Agent Roles share a single AI context or run in isolated contexts is determined by the active domain-specific implementation and the project's risk level (see [Section 8](#8-risk-calibration)). |
 | **Domain-specific implementation** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active implementation is selected from `twtty/methodology/domain-specific-implementations/<implementation>.md` (for example, `twtty/methodology/domain-specific-implementations/sdlc.md`). |
 | **Risk level** | A 1–5 calibration of the project's risk profile that determines how much process the pipeline enforces. See [Section 8](#8-risk-calibration). |
 
@@ -148,9 +148,9 @@ Each stage has a stage exit Approval Gate that controls progression to the next 
 | Stage | Stage exit Approval Gate |
 |------|-----------|
 | **Seed** | Intent is explicit and approved. |
-| **Spec** | Requirements and approval criteria are approved. |
+| **Spec** | Acceptance criteria are approved. |
 | **Plan** | Execution strategy and sequencing are approved. |
-| **Execute** | Outcomes meet the approved criteria, are documented, and are ready for iteration or closure. |
+| **Execute** | Outcomes meet the acceptance criteria, are documented, and are ready for iteration or closure. |
 
 ### Approval options
 
@@ -175,6 +175,8 @@ Used by the **discovery Agent Role** at the start of a project.
 The discovery Agent Role has no prior knowledge of what the Human User wants to build. It conducts a structured interview by asking targeted questions to elicit goals, constraints, edge cases, and acceptance criteria. After discovery is complete, execution continues through the standard TWTTY loop.
 
 > **Note:** The discovery Agent Role should propose sensible defaults when the Human User lacks domain expertise. Pure interviewing without informed challenge risks weak requirements.
+
+On approval of the elicited content, the discovery Agent Role MUST write it to the canonical spec file under `<project-folder>/spec/` (`spec.md` for the baseline, or `spec-<release-id>.md` for a subsequent Release Scope) and append a replay-log entry per [Section 5 — Replay-execution log format](#replay-execution-log-format).
 
 The interview protocol runs once per project during initial discovery, unless a later Release Scope requires additional discovery. Subsequent stages use the standard TWTTY loop (propose and write prompt -> approve/modify -> execute -> review -> record).
 
@@ -331,7 +333,6 @@ For each subsequent Release Scope, the AI Agent MUST create a new release-scoped
   - **Discovery Agent Role** → Interview Me (elicit requirements; propose defaults when the user lacks expertise).
   - **All non-discovery agents** → the TWTTY loop in [Section 11.4](#114-the-twtty-loop). Run the loop one or more times to produce the defined artifact for the stage task.
 3. Wait for explicit human approval at each Approval Gate before advancing to the next stage task or stage.
-4. Map the same TWTTY loop to the active domain's equivalent stages and artifacts.
 
 ### 11.4 The TWTTY loop
 
@@ -352,7 +353,7 @@ Follow the table in [Section 9](#9-failure-handling). Never proceed on assumptio
 ### 11.6 Rules
 
 - **Optimize plans** for the shortest path to done given the risk level.
-- **Use structured prompts** that conform to context engineering principles.
+- **Use structured prompts.** Each prompt MUST state the goal, scope, inputs, expected output, and acceptance criteria, and reference relevant artifacts (seed, spec, plan, prior replay-log entries) when applicable.
 - **Document continuously.** The replay-execution log MUST capture every approved prompt and result (per [Rule 4](#normative-keywords-and-consistency-rules)) plus every abandon and escalate event.
 - **One recorded entry per approved prompt-and-result** to preserve atomic, traceable history.
 - **When uncertain, ask.** Do not assume.
