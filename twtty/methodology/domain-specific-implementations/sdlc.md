@@ -51,13 +51,14 @@ The authoritative SDLC execution order is listed in [Section 3 — Stage and sta
   |           |                          |                      | 3l Observability                     |
   |           |                          |                      | 3m Iteration                         |
   +-----------+--------------------------+----------------------+--------------------------------------+
-  | seed/     | spec/                    | plan/                | repository source / tests / infra /  |
-  | seed.md   | spec.md                  | plan.md              | .github/ (see Artifact locations)    |
+  | seed/     | spec/spec.md             | plan/plan.md         | repository source / tests / infra /  |
+  | seed.md   | spec/spec-R2.md          | plan/plan-R2.md      | .github/ (see Artifact locations)    |
+  |           | spec/spec-R3.md  ...     | plan/plan-R3.md  ... |                                      |
   +-----------+--------------------------+----------------------+--------------------------------------+
-  | replay-execution/replay-execution.md (appended throughout all stages)                              |
+  | replay-execution/replay-execution.md (appended throughout all stages and releases)                 |
   +----------------------------------------------------------------------------------------------------+
                                                                                   │
-                              ◀──── Feedback loop ── next Seed ───────────────────┘
+                              ◀──── Feedback loop ── next release ────────────────┘
 ```
 
 Each stage is informed by the prior stage output. No stage begins until the prior stage exit Approval Gate is satisfied.
@@ -218,7 +219,7 @@ These rules are specific to software delivery and extend (do not replace) the co
 
 ## 9. Execution rules
 
-These rules extend the core TWTTY rules ([Section 11.6](../core-twtty-methodology.md#116-rules)) with software-delivery specifics.
+These rules extend the core TWTTY rules ([Section 11.7](../core-twtty-methodology.md#117-rules)) with software-delivery specifics.
 
 - **Follow GitHub Copilot best practices** for prompts and context engineering.
 - **Never skip a gate.** At risk levels 4–5, all gates MUST be enforced (see [Section 7](#7-risk-enforcement-profile)).
