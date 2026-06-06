@@ -178,7 +178,7 @@ The discovery Agent Role has no prior knowledge of what the Human User wants to 
 
 > **Note:** The discovery Agent Role should propose sensible defaults when the Human User lacks domain expertise. Pure interviewing without informed challenge risks weak requirements.
 
-On approval of the elicited content, the discovery Agent Role MUST write it to the canonical spec file under `<project-folder>/spec/` (`spec.md` for the baseline, or `spec-<release-id>.md` for a new Release Scope) and append a replay-log entry per [Section 5 — Replay-execution log format](#replay-execution-log-format). The approved spec satisfies the SPEC stage exit Approval Gate.
+On approval of the elicited content, the discovery Agent Role MUST write it to the canonical spec file under `<project-folder>/spec/` (`spec.md` for the baseline, or `spec-<release-id>.md` for a new Release Scope) and append exactly one replay-log entry per [Section 5 — Replay-execution log format](#replay-execution-log-format) recording the approved spec. Individual interview questions and answers exchanged during elicitation are not logged; only the final approved spec is. The approved spec satisfies the SPEC stage exit Approval Gate.
 
 The interview protocol runs at two points: once at initial discovery (full project scope), and once at the start of every new Release Scope (release-scoped; the existing Project Seed is reused). All non-discovery activity uses the standard TWTTY loop (propose and write prompt -> approve/modify -> execute -> review -> record).
 
@@ -256,7 +256,7 @@ The replay-execution log is a single markdown file containing one `###` section 
 ### <sequence-id> · <stage>/<stage-task> · <approval-gate-name>
 
 - **Timestamp:** <ISO-8601 UTC, e.g., 2026-06-05T18:45:00Z>
-- **Approval outcome:** Approved | Approved with changes | Reject | Abandon | Escalate
+- **Approval outcome:** Approved | Approved with changes | Abandon | Escalate
 - **Approved prompt:**
 
   ```
@@ -268,7 +268,9 @@ The replay-execution log is a single markdown file containing one `###` section 
 - **Notes:** <rationale; REQUIRED when Approval outcome is `Abandon` or `Escalate`; optional otherwise>
 ````
 
-Entries MUST appear in monotonically increasing `<sequence-id>` order. Timestamps MUST be UTC ISO-8601 so resume and audit operations are deterministic across contributors and time zones. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
+Entries MUST appear in monotonically increasing `<sequence-id>` order. The `<sequence-id>` MUST be a zero-padded integer of at least three digits (for example, `001`, `002`, ..., `010`, ..., `100`) so that entries sort lexicographically. Timestamps MUST be UTC ISO-8601 so resume and audit operations are deterministic across contributors and time zones. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
+
+Only outcomes that change project state are logged: `Approved`, `Approved with changes`, `Abandon`, and `Escalate`. `Reject` responses during a Refine cycle ([Section 9](#9-failure-handling)) MUST NOT produce log entries; only the eventual approved result (or the terminal `Abandon` / `Escalate`) is recorded.
 
 The `<approval-gate-name>` field MUST contain the gate name when the entry corresponds to an Approval Gate event (stage exit or stage task gate); otherwise it MUST be `—` (em dash).
 
@@ -363,11 +365,10 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 
 1. Determine the `<project-folder>` name from user intent (stable slug).
 2. Create `<project-folder>` with the standard structure.
-3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. The approved seed satisfies the SEED stage exit Approval Gate.
-4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user.
+3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format), with the SEED stage exit Approval Gate name). The approved seed satisfies the SEED stage exit Approval Gate.
+4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user. On confirmation, append a replay-log entry recording the confirmed risk level (per [Section 5](#replay-execution-log-format), with `<approval-gate-name>` set to `—`; place the level value in the `Execution outcome` field).
 5. Calibrate the pipeline (which stage tasks apply) based on the confirmed risk level.
 6. Proceed to SPEC by entering the discovery interview (see [Section 4.1](#41-interview-me)).
-
 ### 11.3 On new Release Scope
 
 New Release Scopes after the baseline go through only SPEC → PLAN → EXECUTE. Confirm the new release ID with the user before starting and run a release-scoped discovery interview limited to the new release's intent (the existing Project Seed is reused; full re-discovery is not required).
