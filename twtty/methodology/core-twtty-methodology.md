@@ -295,6 +295,8 @@ Only outcomes that change project state are logged: `Approved`, `Approved with c
 
 The `<approval-gate-name>` field MUST contain the gate name when the entry corresponds to an Approval Gate event (stage exit or stage task gate); otherwise it MUST be `—` (em dash).
 
+The canonical stage-exit gate names are `SEED-EXIT`, `SPEC-EXIT`, `PLAN-EXIT`, and `EXECUTE-EXIT`. These four names MUST be used verbatim for stage-exit entries. Domain-specific implementations MAY define additional stage-task gate names but MUST NOT redefine the four canonical stage-exit names.
+
 Entries with `<stage>` = `meta` are administrative records that do not correspond to project stages. All `meta/*` entries MUST use `<approval-gate-name>` = `—`. The defined `meta/*` stage tasks are:
 
 - **`meta/init`** — chunked-layout initialization (see [Storage layout](#storage-layout)). `Execution outcome` MUST be `chunking enabled, granularity=<period>`.
@@ -397,18 +399,19 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 3. Read every existing stage artifact in `<project-folder>/`: `seed/seed.md`, all `spec/*.md`, all `plan/*.md`, and any EXECUTE artifacts (locations defined by the active domain-specific implementation).
 4. Reconcile log against artifacts. If a stage artifact exists with no corresponding log entry for its creation or update, the AI Agent MUST treat this as a drift condition and escalate per [Section 9](#9-failure-handling). The Human User MAY authorize the drift; on authorization the AI Agent MUST append a `meta/backfill` entry (see [Section 5](#replay-execution-log-format)) before continuing.
 5. Identify the active risk level from the most recent `meta/risk-level` entry in the log and apply its pipeline calibration. If no `meta/risk-level` entry exists, escalate per [Section 9](#9-failure-handling).
-6. Identify the most recent log entry by `<sequence-id>`. Determine the next action:
-   - **Approved stage exit gate for EXECUTE** → the active release is complete. Announce completion and wait for Human User direction; the AI Agent MUST NOT propose further work autonomously. If a new Release Scope is requested, route to [11.3 On new Release Scope](#113-on-new-release-scope).
-   - **Approved stage exit gate for any other stage** → begin the next stage at its first stage task.
-   - **Approved stage task entry (not a gate)** → begin the next stage task within the active stage.
-   - **`Abandon` or `Escalate` entry** → surface the entry's `Notes` to the Human User and wait for direction. Do not propose continuation autonomously.
+6. Find the most recent non-`meta/*` entry in the log. Determine the next action from its fields:
+   - **`Approval outcome` = `Abandon` or `Escalate`** → surface the entry's `Notes` to the Human User and wait for direction. Do not propose continuation autonomously.
+   - **`<approval-gate-name>` = `EXECUTE-EXIT`** → the active release is complete. Announce completion and wait for Human User direction; the AI Agent MUST NOT propose further work autonomously. If a new Release Scope is requested, route to [11.3 On new Release Scope](#113-on-new-release-scope).
+   - **`<approval-gate-name>` ∈ {`SEED-EXIT`, `SPEC-EXIT`, `PLAN-EXIT`}** → begin the next stage at its first stage task.
+   - **`<approval-gate-name>` = `—`** → the entry is a non-gate stage task; begin the next stage task within the active stage.
+   - **`<approval-gate-name>` is any other value** → it is a domain-defined stage-task gate; defer routing to the active domain-specific implementation.
 7. Before continuing, announce to the Human User: the active release ID, the active risk level, the most recent recorded entry, and the proposed next stage or stage task. Obtain explicit confirmation before re-entering the TWTTY loop.
 
 ### 11.2 On first contact
 
 1. Determine the `<project-folder>` name from user intent (stable slug).
 2. Create `<project-folder>` with the standard structure.
-3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format), with the SEED stage exit Approval Gate name). The approved seed satisfies the SEED stage exit Approval Gate.
+3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format); `<approval-gate-name>` = `SEED-EXIT`). The approved seed satisfies the SEED stage exit Approval Gate.
 4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user. On confirmation, append a `meta/risk-level` entry to the log (see [Section 5](#replay-execution-log-format)).
 5. Calibrate the pipeline (which stage tasks apply) based on the confirmed risk level.
 6. Proceed to SPEC by entering the discovery interview (see [Section 4.1](#41-interview-me)).
