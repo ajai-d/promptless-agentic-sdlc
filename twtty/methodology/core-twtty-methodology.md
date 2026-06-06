@@ -295,14 +295,26 @@ Only outcomes that change project state are logged: `Approved`, `Approved with c
 
 The `<approval-gate-name>` field MUST contain the gate name when the entry corresponds to an Approval Gate event (stage exit or stage task gate); otherwise it MUST be `—` (em dash).
 
+Entries with `<stage>` = `meta` are administrative records that do not correspond to project stages. All `meta/*` entries MUST use `<approval-gate-name>` = `—`. The defined `meta/*` stage tasks are:
+
+- **`meta/init`** — chunked-layout initialization (see [Storage layout](#storage-layout)). `Execution outcome` MUST be `chunking enabled, granularity=<period>`.
+- **`meta/risk-level`** — confirmed risk level (see [Section 11.2 step 4](#112-on-first-contact)). `Execution outcome` MUST be the numeric level (1–5).
+- **`meta/backfill`** — authorized drift backfill on resume (see [Section 11.1 step 4](#111-on-resume)). `Approval outcome` MUST be `Approved with changes`; `Notes` MUST describe the out-of-band change being backfilled.
+
 #### Storage layout
 
 The log MAY be stored as either a single file or as multiple time-period chunk files. A project MUST use exactly one layout (single-file OR chunked), never both; mixing layouts within a project is prohibited. Both layouts MUST satisfy the rules above.
 
 - **Single-file layout (default).** The entire log lives in `<project-folder>/replay-execution/replay-execution.md`. The file MUST start with an `# H1` title and a one-line description; all subsequent content MUST be entry sections.
-- **Chunked layout (optional).** The log is split across multiple files in `<project-folder>/replay-execution/`, each covering one time period. When the chunked layout is used, the single-file `replay-execution.md` MUST NOT exist in the same folder. Chunk files MUST be named `replay-execution-<period>.md` where `<period>` is one of: `YYYY` (yearly), `YYYY-Qn` (quarterly, `n` in 1-4), `YYYY-MM` (monthly), `YYYY-Www` (ISO week, `ww` zero-padded), or `YYYY-MM-DD` (daily). Exactly one period granularity MUST be used per project; mixing granularities is prohibited. Each chunk file MUST start with an `# H1` title that includes the period (for example, `# Replay-Execution Log — 2026-06`) and a one-line description; all subsequent content MUST be entry sections. Entries MUST be appended to the chunk file whose period contains the entry's timestamp. `<sequence-id>` values remain globally unique and monotonically increasing across all chunk files; they MUST NOT reset at chunk boundaries. The chosen period and start date MUST be recorded as the first entry in the first chunk using `<stage>/<stage-task>` = `meta/init` and `<approval-gate-name>` = `—`, with `Execution outcome: chunking enabled, granularity=<period>`. Switching granularities later is prohibited without a new project.
+- **Chunked layout (optional).** The log is split across multiple time-period files in `<project-folder>/replay-execution/`. The following rules apply:
+  - Chunk files MUST be named `replay-execution-<period>.md`. `<period>` MUST be one of: `YYYY`, `YYYY-Qn`, `YYYY-MM`, `YYYY-Www`, or `YYYY-MM-DD`.
+  - Exactly one granularity MUST be used per project; mixing or switching granularities is prohibited.
+  - The single-file `replay-execution.md` MUST NOT exist in the same folder.
+  - Each chunk MUST start with an `# H1` title including the period (for example, `# Replay-Execution Log — 2026-06`) and a one-line description.
+  - Entries are appended to the chunk whose period contains the entry's timestamp. `<sequence-id>` values remain globally unique and monotonically increasing across all chunks.
+  - The first entry in the first chunk MUST be a `meta/init` entry (see [Replay-execution log format](#replay-execution-log-format)) with `Execution outcome: chunking enabled, granularity=<period>`.
 
-On resume ([Section 11.1](#111-on-resume)), the AI Agent MUST read every `replay-execution*.md` file in `<project-folder>/replay-execution/` in lexicographic filename order and treat their concatenation as the authoritative log. The naming conventions above guarantee that lexicographic filename order matches chronological order.
+On resume ([Section 11.1](#111-on-resume)), the AI Agent MUST read every `replay-execution*.md` file in `<project-folder>/replay-execution/` in lexicographic filename order and treat their concatenation as the authoritative log. The naming above guarantees lexicographic order matches chronological order.
 
 ---
 
@@ -383,8 +395,8 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 1. Derive the candidate `<project-folder>` slug from the Human User's intent (or use one provided by the user). If the candidate folder does not exist, route to [11.2 On first contact](#112-on-first-contact).
 2. Read the replay-execution log in full: every `replay-execution*.md` file in `<project-folder>/replay-execution/`, in lexicographic filename order, treated as a single concatenated log (see [Section 5 — Replay-execution log format](#replay-execution-log-format)).
 3. Read every existing stage artifact in `<project-folder>/`: `seed/seed.md`, all `spec/*.md`, all `plan/*.md`, and any EXECUTE artifacts (locations defined by the active domain-specific implementation).
-4. Reconcile log against artifacts. If a stage artifact exists with no corresponding log entry for its creation or update, the AI Agent MUST treat this as a drift condition and escalate per [Section 9](#9-failure-handling). The Human User MAY authorize the drift; on authorization the AI Agent MUST append a backfill log entry (Approval outcome: `Approved with changes`, Notes: `backfill for out-of-band edit, authorized on resume`) before continuing.
-5. Identify the active risk level by scanning the log for the most recent risk-level entry (per [Section 11.2 step 4](#112-on-first-contact)) and apply its pipeline calibration. If no risk-level entry exists, escalate per [Section 9](#9-failure-handling).
+4. Reconcile log against artifacts. If a stage artifact exists with no corresponding log entry for its creation or update, the AI Agent MUST treat this as a drift condition and escalate per [Section 9](#9-failure-handling). The Human User MAY authorize the drift; on authorization the AI Agent MUST append a `meta/backfill` entry (see [Section 5](#replay-execution-log-format)) before continuing.
+5. Identify the active risk level from the most recent `meta/risk-level` entry in the log and apply its pipeline calibration. If no `meta/risk-level` entry exists, escalate per [Section 9](#9-failure-handling).
 6. Identify the most recent log entry by `<sequence-id>`. Determine the next action:
    - **Approved stage exit gate for EXECUTE** → the active release is complete. Announce completion and wait for Human User direction; the AI Agent MUST NOT propose further work autonomously. If a new Release Scope is requested, route to [11.3 On new Release Scope](#113-on-new-release-scope).
    - **Approved stage exit gate for any other stage** → begin the next stage at its first stage task.
@@ -397,7 +409,7 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 1. Determine the `<project-folder>` name from user intent (stable slug).
 2. Create `<project-folder>` with the standard structure.
 3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format), with the SEED stage exit Approval Gate name). The approved seed satisfies the SEED stage exit Approval Gate.
-4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user. On confirmation, append a replay-log entry recording the confirmed risk level (per [Section 5](#replay-execution-log-format), with `<approval-gate-name>` set to `—`; place the level value in the `Execution outcome` field).
+4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user. On confirmation, append a `meta/risk-level` entry to the log (see [Section 5](#replay-execution-log-format)).
 5. Calibrate the pipeline (which stage tasks apply) based on the confirmed risk level.
 6. Proceed to SPEC by entering the discovery interview (see [Section 4.1](#41-interview-me)).
 
