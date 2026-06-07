@@ -378,13 +378,13 @@ TWTTY is not a silver bullet. Users should understand the following constraints.
 
 > This section provides operating instructions for AI agents executing TWTTY. Human readers can skip to [Section 12](#12-reference).
 
-On every invocation, before proposing any action, the AI Agent MUST follow [11.1 On resume](#111-on-resume) to establish the current project state. The resume protocol then routes execution to one of the other flows: [11.2 On first contact](#112-on-first-contact) when no project exists, [11.3 On new Release Scope](#113-on-new-release-scope) when the most recent release is complete and the Human User requests a new release, or continuation of the in-progress release.
+On every invocation, before proposing any action, the AI Agent MUST follow [11.1 On resume](#111-on-resume) to establish the current project state. The resume protocol then routes execution to one of the other flows: [11.2 On first contact](#112-on-first-contact) when no replay-execution log exists yet, [11.3 On new Release Scope](#113-on-new-release-scope) when the most recent release is complete and the Human User requests a new release, or continuation of the in-progress release.
 
 ### 11.1 On resume
 
 The AI Agent MUST be able to resume an in-progress project regardless of where the prior session stopped. The replay-execution log plus the existing stage artifacts are the authoritative sources for project state.
 
-1. Derive the candidate `<project-folder>` slug from the Human User's intent (or use one provided by the user). If the candidate folder does not exist, route to [11.2 On first contact](#112-on-first-contact).
+1. Determine the candidate `<project-folder>` slug: if the Human User provided one, use it verbatim; otherwise propose a slug derived from the user's intent (lowercase, hyphen-separated, stable for the project's lifetime — for example, `inventory-management`) and obtain explicit confirmation before proceeding. If `<project-folder>/replay-execution/` does not exist or contains no `replay-execution*.md` files, route to [11.2 On first contact](#112-on-first-contact). A `<project-folder>` containing only a Human-User-prepared `seed/seed.md` and no replay-execution log is still a first-contact state.
 2. Read the replay-execution log in full: every `replay-execution*.md` file in `<project-folder>/replay-execution/`, in lexicographic filename order, treated as a single concatenated log (see [Section 5 — Replay-execution log format](#replay-execution-log-format)).
 3. Read every existing stage artifact in `<project-folder>/`: `seed/seed.md`, all `spec/*.md`, all `plan/*.md`, and any EXECUTE artifacts (locations defined by the active domain-specific implementation).
 4. Reconcile log against artifacts. If a stage artifact exists with no corresponding log entry for its creation or update, the AI Agent MUST treat this as a drift condition and escalate per [Section 9](#9-failure-handling). The Human User MAY authorize the drift; on authorization the AI Agent MUST append a `meta/backfill` entry (see [Section 5](#replay-execution-log-format)) before continuing.
@@ -401,9 +401,9 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 
 First contact creates the baseline release, which is identified as `R1`. R1 artifacts use the unsuffixed filenames `spec.md` and `plan.md` (see [Section 11.3](#113-on-new-release-scope) for subsequent releases).
 
-1. Determine the `<project-folder>` name from user intent (stable slug).
+1. Use the confirmed `<project-folder>` slug from [Section 11.1 step 1](#111-on-resume).
 2. Create `<project-folder>` with the standard structure.
-3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. Draft it from the user's intent and obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format); `<approval-gate-name>` = `SEED-EXIT`). The approved seed satisfies the SEED stage exit Approval Gate.
+3. Ensure the project seed exists in `<project-folder>/seed/seed.md`. If a seed already exists (for example, the Human User copied the template per [Section 5](#starting-a-project)), treat it as the user's initial draft and MUST NOT overwrite without explicit approval. Otherwise draft it from the user's intent. In both cases, obtain explicit Human User approval before proceeding. On approval, append a replay-log entry recording the approved seed (per [Section 5](#replay-execution-log-format); `<approval-gate-name>` = `SEED-EXIT`). The approved seed satisfies the SEED stage exit Approval Gate.
 4. Assess the project's [risk level](#8-risk-calibration) (1–5) and confirm it with the user. On confirmation, append a `meta/risk-level` entry to the log (see [Section 5](#replay-execution-log-format)).
 5. Calibrate the pipeline (which stage tasks apply) based on the confirmed risk level.
 6. Proceed to SPEC by entering the discovery interview (see [Section 4.1](#41-interview-me)).
