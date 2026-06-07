@@ -231,7 +231,7 @@ inventory-management/
     replay-execution.md                               (AI Agent: log — single-file layout, spans all releases)
 ```
 
-Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`. Release-scoped spec and plan files MUST be named `spec-<release-id>.md` and `plan-<release-id>.md`; the baseline `spec.md` and `plan.md` MUST NOT be overwritten (see [Section 11.3](#113-on-new-release-scope)). Paths for EXECUTE-stage outputs are defined by the active domain-specific implementation (for software delivery, this typically means standard source-code locations like `src/`, `tests/`, etc.). The replay-execution log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/`; see [Storage layout](#storage-layout).
+Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`. Release-scoped spec and plan files MUST be named `spec-<release-id>.md` and `plan-<release-id>.md`; the baseline `spec.md` and `plan.md` MUST NOT be overwritten (see [Section 11.3](#113-on-new-release-scope)). Paths for EXECUTE-stage outputs are defined by the active domain-specific implementation (for software delivery, this typically means standard source-code locations like `src/`, `tests/`, etc.). The replay-execution log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/`; see [Replay-execution log file layout](#replay-execution-log-file-layout).
 
 ### Pipeline and artifacts
 
@@ -289,11 +289,11 @@ The canonical stage-exit gate names are `SEED-EXIT`, `SPEC-EXIT`, `PLAN-EXIT`, a
 
 Entries with `<stage>` = `meta` are administrative records that do not correspond to project stages. All `meta/*` entries MUST use `<approval-gate-name>` = `—`. The defined `meta/*` stage tasks are:
 
-- **`meta/init`** — chunked-layout initialization (see [Storage layout](#storage-layout)). `Execution outcome` MUST be `chunking enabled, granularity=<period>`.
+- **`meta/init`** — chunked-layout initialization (see [Replay-execution log file layout](#replay-execution-log-file-layout)). `Execution outcome` MUST be `chunking enabled, granularity=<period>`.
 - **`meta/risk-level`** — confirmed risk level (see [Section 11.2 step 4](#112-on-first-contact)). `Execution outcome` MUST be the numeric level (1–5).
 - **`meta/backfill`** — authorized drift backfill on resume (see [Section 11.1 step 4](#111-on-resume)). `Approval outcome` MUST be `Approved with changes`; `Notes` MUST describe the out-of-band change being backfilled.
 
-#### Storage layout
+#### Replay-execution log file layout
 
 The log MAY be stored as either a single file or as multiple time-period chunk files. A project MUST use exactly one layout (single-file OR chunked), never both; mixing layouts within a project is prohibited. Both layouts MUST satisfy the rules above.
 
@@ -398,6 +398,8 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 7. Before continuing, announce to the Human User: the active release ID, the active risk level, the most recent recorded entry, and the proposed next stage or stage task. Obtain explicit confirmation before re-entering the TWTTY loop.
 
 ### 11.2 On first contact
+
+First contact creates the baseline release, which is identified as `R1`. R1 artifacts use the unsuffixed filenames `spec.md` and `plan.md` (see [Section 11.3](#113-on-new-release-scope) for subsequent releases).
 
 1. Determine the `<project-folder>` name from user intent (stable slug).
 2. Create `<project-folder>` with the standard structure.
