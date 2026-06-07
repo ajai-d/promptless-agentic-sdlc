@@ -211,27 +211,31 @@ Recommended naming for `<project-folder>`: a stable slug (lowercase, hyphen-sepa
 
 ### Project layout
 
-The AI Agent MUST write project artifacts to the canonical paths shown below. Example for a project named `inventory-management` with a baseline release and one subsequent Release Scope (`R2`):
+The AI Agent MUST write project artifacts to the canonical paths shown below. Example for a project named `inventory-management` with a baseline release (`R1`) and two subsequent Release Scopes (`R2`, `R3`):
 
 ```text
 inventory-management/
   seed/
     seed.md                                           (Human User: copies template)
   spec/
-    spec.md                                           (AI Agent: baseline spec)
-    spec-R2.md                                        (AI Agent: release-scoped spec)
+    spec.md                                           (AI Agent: baseline spec — R1)
+    spec-R2.md                                        (AI Agent: release-scoped spec — R2)
+    spec-R3.md                                        (AI Agent: release-scoped spec — R3)
+    ...                                               (AI Agent: spec-<release-id>.md per release)
   plan/
-    plan.md                                           (AI Agent: baseline plan)
-    plan-R2.md                                        (AI Agent: release-scoped plan)
+    plan.md                                           (AI Agent: baseline plan — R1)
+    plan-R2.md                                        (AI Agent: release-scoped plan — R2)
+    plan-R3.md                                        (AI Agent: release-scoped plan — R3)
+    ...                                               (AI Agent: plan-<release-id>.md per release)
   replay-execution/
-    replay-execution.md                               (AI Agent: log — default single-file layout)
+    replay-execution.md                               (AI Agent: log — single-file layout, spans all releases)
 ```
 
-Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`. Release-scoped spec and plan files MUST be named `spec-<release-id>.md` and `plan-<release-id>.md`; the baseline `spec.md` and `plan.md` MUST NOT be overwritten (see [Section 11.3](#113-on-new-release-scope)). EXECUTE artifact paths are defined by the active domain-specific implementation. The replay-execution log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/`; see [Storage layout](#storage-layout).
+Each `<project-folder>` MUST have exactly one project seed at `<project-folder>/seed/seed.md`. Release-scoped spec and plan files MUST be named `spec-<release-id>.md` and `plan-<release-id>.md`; the baseline `spec.md` and `plan.md` MUST NOT be overwritten (see [Section 11.3](#113-on-new-release-scope)). Paths for EXECUTE-stage outputs are defined by the active domain-specific implementation (for software delivery, this typically means standard source-code locations like `src/`, `tests/`, etc.). The replay-execution log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/`; see [Storage layout](#storage-layout).
 
 ### Pipeline and artifacts
 
-The following diagram shows the canonical mapping from stages to output artifacts across the baseline release and subsequent Release Scopes. Domain-specific implementations refine the stage tasks within each stage; the artifact layout shown here is normative.
+The following diagram shows the canonical mapping from stages to output artifacts across the baseline release (`R1`) and subsequent Release Scopes (`R2`, `R3`, `...`). Domain-specific implementations refine the stage tasks within each stage; the artifact layout shown here is normative.
 
 ```text
                               TWTTY Pipeline and Artifacts
@@ -242,7 +246,7 @@ The following diagram shows the canonical mapping from stages to output artifact
   +-----------+-------------------------+-------------------------+--------------------------+
   |   SEED    |          SPEC           |          PLAN           |         EXECUTE          |
   +-----------+-------------------------+-------------------------+--------------------------+
-  | seed/     | spec/spec.md            | plan/plan.md            | Implementation-defined   |
+  | seed/     | spec/spec.md     (R1)   | plan/plan.md     (R1)   | Implementation-defined   |
   | seed.md   | spec/spec-R2.md         | plan/plan-R2.md         | (per active domain-      |
   |           | spec/spec-R3.md  ...    | plan/plan-R3.md  ...    | specific implementation) |
   +-----------+-------------------------+-------------------------+--------------------------+
@@ -404,7 +408,7 @@ The AI Agent MUST be able to resume an in-progress project regardless of where t
 
 ### 11.3 On new Release Scope
 
-New Release Scopes after the baseline go through only SPEC → PLAN → EXECUTE. Confirm the new release ID with the user before starting and run a release-scoped discovery interview limited to the new release's intent (the existing Project Seed is reused; full re-discovery is not required).
+The baseline release is identified as `R1` and its artifacts use the unsuffixed names `spec.md` and `plan.md`. Subsequent Release Scopes (`R2`, `R3`, ...) go through only SPEC → PLAN → EXECUTE. Confirm the new release ID with the user before starting and run a release-scoped discovery interview limited to the new release's intent (the existing Project Seed is reused; full re-discovery is not required).
 
 For each new Release Scope, the AI Agent MUST create a new release-scoped spec document at `<project-folder>/spec/spec-<release-id>.md` (for example, `spec-R2.md`) and a new release-scoped plan document at `<project-folder>/plan/plan-<release-id>.md`. The baseline `spec.md` and `plan.md` MUST NOT be overwritten.
 
