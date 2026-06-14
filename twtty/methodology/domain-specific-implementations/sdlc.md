@@ -26,13 +26,13 @@ This document is a Software Development Life Cycle (SDLC) domain-specific implem
 
 ## 2. Pipeline summary
 
-The authoritative SDLC execution order is listed in [Section 3 — Stage and stage task details](#3-stage-and-stage-task-details) below.
+This section is a visual summary of the SDLC pipeline. [Section 3 — Stage and stage task details](#3-stage-and-stage-task-details) is authoritative for execution order, stage tasks, and stage exit gates.
 
 ```text
-                          TWTTY Agentic SDLC Pipeline
+                              TWTTY SDLC Pipeline
 
     SEED ─────▶ SPEC ─────▶ PLAN ─────────────────────────────▶ EXECUTE
-   Intent    Requirements  Build Strategy      Build + Validate + Deploy + Operate
+   Intent    Requirements  Strategy            Build + Validate + Deploy + Operate
 
   +-----------+--------------------------+----------------------+--------------------------------------+
   |   SEED    |           SPEC           |         PLAN         |               EXECUTE                |
@@ -51,9 +51,9 @@ The authoritative SDLC execution order is listed in [Section 3 — Stage and sta
   |           |                          |                      | 3l Observability                     |
   |           |                          |                      | 3m Iteration                         |
   +-----------+--------------------------+----------------------+--------------------------------------+
-  | seed/     | spec/spec.md             | plan/plan.md         | repository source / tests / infra /  |
+  | seed/     | spec/spec.md      (R1)   | plan/plan.md   (R1)  | repository source / tests / infra /  |
   | seed.md   | spec/spec-R2.md          | plan/plan-R2.md      | .github/ (see Artifact locations)    |
-  |           | spec/spec-R3.md  ...     | plan/plan-R3.md  ... |                                      |
+  |           | spec/spec-R3.md   ...    | plan/plan-R3.md ...  |                                      |
   +-----------+--------------------------+----------------------+--------------------------------------+
   | replay-execution/ (appended throughout all stages and releases)                                    |
   |   replay-execution.md                                              (single-file layout, default)   |
@@ -64,9 +64,9 @@ The authoritative SDLC execution order is listed in [Section 3 — Stage and sta
                               ◀──── Feedback loop ── next release ────────────────┘
 ```
 
-Each stage is informed by the prior stage output. No stage begins until the prior stage exit Approval Gate is satisfied.
+Each stage is informed by the prior stage output. No stage begins until the prior stage's exit gate (`SEED-EXIT`, `SPEC-EXIT`, `PLAN-EXIT`, or `EXECUTE-EXIT`) is approved.
 
-Stage tasks listed above are the default set. The Planning Agent tailors them to the project's [risk level](#7-risk-enforcement-profile). A risk-1 prototype MAY use only Setup, Implement, and Test. A risk-5 system MUST use the full EXECUTE set with strict gates.
+The EXECUTE stage tasks listed above are the **default** set. The Planning Agent tailors the applied EXECUTE subset to the project's risk level per [Section 7 — Risk enforcement profile](#7-risk-enforcement-profile), which is the single source of truth. SPEC and PLAN stage tasks apply at every risk level.
 
 ---
 
