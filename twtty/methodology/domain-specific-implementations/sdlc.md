@@ -92,16 +92,36 @@ The EXECUTE stage tasks listed above are the **default** set. The Planning Agent
 
 ### 3.2 Spec
 
-| Stage task | Agent | Output |
-|------------|-------|--------|
-| 1a. Discovery interview | Spec Agent | Raw interview notes (elicitation) |
-| 1b. Business requirements (BRD) | Spec Agent | Goals, stakeholders, success metrics, constraints |
-| 1c. Use cases | Spec Agent | Actors, triggers, main flow, exceptions, dependencies |
-| 1d. Technical specification | Spec Agent | FR, NFR, acceptance criteria traced to use cases |
+| Stage task | Agent | Protocol | Output |
+|------------|-------|----------|--------|
+| 1a. Discovery interview | Spec Agent | Discovery (core [Section 4.1](../core-twtty-methodology.md#41-interview-me)) | Approved interview Q&A pairs recorded as `spec/1a` entries in the replay-execution log. No separate file is produced. |
+| 1b. Business requirements | Spec Agent | TWTTY loop (core [Section 11.5](../core-twtty-methodology.md#115-the-twtty-loop)) | Sections 1–4 (Goals, Stakeholders, Success metrics, Constraints) of `<project-folder>/spec/spec.md`, drafted from the [spec template](templates/spec-template.md). |
+| 1c. Use cases | Spec Agent | TWTTY loop | Section 5 (Use cases) of `<project-folder>/spec/spec.md`. |
+| 1d. Technical specification | Spec Agent | TWTTY loop | Sections 6–8 (FR, NFR, Acceptance criteria) of `<project-folder>/spec/spec.md`. |
 
-The Spec Agent acts as the discovery Agent Role for 1a (see [core Section 4.1](../core-twtty-methodology.md#41-interview-me)).
+Acronyms used in the table: **FR** (Functional Requirements), **NFR** (Non-Functional Requirements), **AC** (Acceptance Criteria), **UC** (Use Case).
 
-**Stage exit gate:** Approval of 1d Technical specification — `spec/spec.md` (or `spec/spec-<release-id>.md` for a subsequent Release Scope).
+For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-<release-id>.md` (see [core Section 11.3](../core-twtty-methodology.md#113-on-new-release-scope)).
+
+**Intra-stage stage tasks 1a, 1b, 1c.** Each is approved through its own protocol cycle (Discovery for 1a, TWTTY loop for 1b/1c) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 1d's approval triggers `SPEC-EXIT`.
+
+**Discovery interview (1a) termination.** The interview MUST end with an explicit termination prompt approved by the Human User. The Spec Agent proposes: *"End of discovery; proceed to 1b Business requirements."* On approval, the agent appends a replay-log entry (`spec/1a`, `<approval-gate-name>` = `—`, `Execution outcome:` = `end of discovery`). 1b MUST NOT start before this entry is recorded.
+
+**Stage exit gate (`SPEC-EXIT`).** All three conditions MUST hold; the AI Agent MUST verify conditions 1–2 mechanically before requesting approval for condition 3:
+
+1. The file `<project-folder>/spec/spec.md` (or `<project-folder>/spec/spec-<release-id>.md` for a subsequent release) exists.
+2. The file passes every check in the [spec template's `SPEC-EXIT` validation checklist](templates/spec-template.md#spec-exit-validation-checklist).
+3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../core-twtty-methodology.md#replay-execution-log-format)).
+
+**Replay-log entry shapes:**
+
+| Stage task | `<stage>/<stage-task>` | `<approval-gate-name>` | `Artifact / path changed` |
+|------------|------------------------|------------------------|---------------------------|
+| 1a (per Q&A pair) | `spec/1a` | `—` | `<project-folder>/replay-execution/<file>.md` |
+| 1a (termination) | `spec/1a` | `—` | `<project-folder>/replay-execution/<file>.md` |
+| 1b | `spec/1b` | `—` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
+| 1c | `spec/1c` | `—` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
+| 1d (final) | `spec/1d` | `SPEC-EXIT` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
 
 ### 3.3 Plan
 
