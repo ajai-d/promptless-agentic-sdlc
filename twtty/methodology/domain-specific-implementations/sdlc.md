@@ -20,7 +20,7 @@
 
 ## 1. Purpose
 
-This document is a Software Development Life Cycle (SDLC) domain-specific implementation of the [Core TWTTY Specification](../core-twtty-methodology.md). It maps the four canonical TWTTY stages (`SEED → SPEC → PLAN → EXECUTE`) to concrete stage tasks, artifacts, and agent roles for software delivery. In this implementation, EXECUTE includes delivery and operations.
+This document is a Software Development Life Cycle (SDLC) domain-specific implementation of the [Core TWTTY Specification](../core-twtty-methodology.md). It maps the four canonical TWTTY stages (`SEED → SPEC → PLAN → EXECUTE`) to concrete stage tasks, artifacts, agent roles, and approval gates for software delivery. In this implementation, EXECUTE includes delivery and operations.
 
 ---
 
