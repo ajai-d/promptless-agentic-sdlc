@@ -76,9 +76,19 @@ The EXECUTE stage tasks listed above are the **default** set. The Planning Agent
 
 | Stage task | Agent | Output |
 |------------|-------|--------|
-| 0a. Intent | Human | A short description of intent in `<project-folder>/seed/seed.md` |
+| 0a. Intent | Human User (with AI Agent assistance per [core Section 11.2](../core-twtty-methodology.md#112-on-first-contact)) | `<project-folder>/seed/seed.md` — a copy of [`twtty/templates/seed-prompt-template.md`](../../templates/seed-prompt-template.md) with both required sections (`## What I Want To Build` and `## Done Looks Like`) completed. |
 
-**Stage exit gate:** Approved `seed.md`.
+**Stage exit gate (`SEED-EXIT`).** All four conditions MUST hold; the AI Agent MUST verify conditions 1–3 mechanically before requesting approval for condition 4:
+
+1. The file `<project-folder>/seed/seed.md` exists.
+2. The file contains both required `## What I Want To Build` and `## Done Looks Like` H2 sections.
+3. Neither section contains the template placeholder text (`[Describe your project...]`, `[How will you know it's complete?...]`) and both sections contain non-whitespace content.
+4. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5 — Replay-execution log format](../core-twtty-methodology.md#replay-execution-log-format)).
+
+**Replay-log entry on `SEED-EXIT`:**
+- `<stage>/<stage-task>` = `seed/0a`
+- `<approval-gate-name>` = `SEED-EXIT`
+- `Artifact / path changed` MUST be `<project-folder>/seed/seed.md`
 
 ### 3.2 Spec
 
