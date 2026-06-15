@@ -1,5 +1,15 @@
 # Spec Template
 
+> **Design decision (locked) — single-file specification.**
+>
+> This template defines a **single** `spec.md` file rather than splitting into separate documents (e.g., `business-requirements.md`, `use-cases.md`, `technical-spec.md`). This is deliberate.
+>
+> The eight sections are tightly coupled: FRs reference use cases, ACs reference FRs/NFRs, and the `SPEC-EXIT` validation checklist enforces cross-section traceability (no orphan FRs/NFRs; every AC traces to ≥1 requirement). Splitting these into separate files would weaken that traceability — the checklist would have to walk multiple files and resolve cross-file references, adding moving parts and failure modes for no readability benefit (a large project's use cases are large whether they live in `spec.md` Section 5 or a separate `use-cases.md`).
+>
+> Reproducibility at the acceptance-criteria level (per [core Section 11.7](../../core-twtty-methodology.md#117-rules)) depends on the spec being one coherent contract. Do not split this file.
+>
+> Note: [SDLC Section 3.3](../sdlc.md#33-plan) does split its outputs into multiple files because Plan-stage artifacts (architecture, design, orchestration) are loosely coupled with different lifecycles and consumers. The split-vs-single decision is per-stage, justified by coupling.
+
 > Template for the **Technical Specification** artifact produced by stage tasks 1b, 1c, and 1d of the [SDLC implementation](../sdlc.md#32-spec). Saved by the Spec Agent to `<project-folder>/spec/spec.md` (baseline release `R1`) or `<project-folder>/spec/spec-<release-id>.md` (subsequent releases).
 >
 > All `[bracketed placeholders]` MUST be replaced. Section headings (`## 1.`, `## 2.`, ..., `## 8.`) MUST be preserved verbatim — the AI Agent uses them for mechanical validation at `SPEC-EXIT`.

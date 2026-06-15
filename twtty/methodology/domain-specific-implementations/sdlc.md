@@ -101,6 +101,8 @@ The EXECUTE stage tasks listed above are the **default** set. The Planning Agent
 
 Acronyms used in the table: **FR** (Functional Requirements), **NFR** (Non-Functional Requirements), **AC** (Acceptance Criteria), **UC** (Use Case).
 
+> **Note:** `spec.md` is intentionally a single file (not split into separate documents). See the design-decision note at the top of the [spec template](templates/spec-template.md) for the rationale.
+
 For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-<release-id>.md` (see [core Section 11.3](../core-twtty-methodology.md#113-on-new-release-scope)).
 
 **Intra-stage stage tasks 1a, 1b, 1c.** Each is approved through its own protocol cycle (Discovery for 1a, TWTTY loop for 1b/1c) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 1d's approval triggers `SPEC-EXIT`.
