@@ -8,7 +8,7 @@
 >
 > Reproducibility at the acceptance-criteria level (per [core Section 11.7](../../core-twtty-methodology.md#117-rules)) depends on the spec being one coherent contract. Do not split this file.
 >
-> Note: [SDLC Section 3.3](../sdlc.md#33-plan) does split its outputs into multiple files because Plan-stage artifacts (architecture, design, orchestration) are loosely coupled with different lifecycles and consumers. The split-vs-single decision is per-stage, justified by coupling.
+> Note: [SDLC Section 3.3](../sdlc.md#33-plan) follows the same single-file pattern: a single `plan.md` with sections for Architecture, Design, and Orchestration. The `PLAN-EXIT` checklist enforces cross-section traceability (every design item maps to an architecture component; every work item traces to architecture or to a spec FR/NFR), which is simpler with one file.
 
 > Template for the **Technical Specification** artifact produced by stage tasks 1b, 1c, and 1d of the [SDLC implementation](../sdlc.md#32-spec). Saved by the Spec Agent to `<project-folder>/spec/spec.md` (baseline release `R1`) or `<project-folder>/spec/spec-<release-id>.md` (subsequent releases).
 >
