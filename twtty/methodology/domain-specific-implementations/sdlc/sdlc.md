@@ -1,6 +1,6 @@
 # SDLC Domain-Specific Implementation
 
-> This document extends the [Core TWTTY Specification](../core-twtty-methodology.md). It MUST NOT weaken the core's approval rules, stage order, or traceability requirements (see [core — Core TWTTY Specification vs. Domain-Specific Implementation](../core-twtty-methodology.md#core-twtty-specification-vs-domain-specific-implementation)).
+> This document extends the [Core TWTTY Specification](../../core-twtty-methodology.md). It MUST NOT weaken the core's approval rules, stage order, or traceability requirements (see [core — Core TWTTY Specification vs. Domain-Specific Implementation](../../core-twtty-methodology.md#core-twtty-specification-vs-domain-specific-implementation)).
 
 ## In this document
 
@@ -20,7 +20,7 @@
 
 ## 1. Purpose
 
-This document is a Software Development Life Cycle (SDLC) domain-specific implementation of the [Core TWTTY Specification](../core-twtty-methodology.md). It maps the four canonical TWTTY stages (`SEED → SPEC → PLAN → EXECUTE`) to concrete stage tasks, artifacts, agent roles, and approval gates for software delivery. In this implementation, EXECUTE includes delivery and operations.
+This document is a Software Development Life Cycle (SDLC) domain-specific implementation of the [Core TWTTY Specification](../../core-twtty-methodology.md). It maps the four canonical TWTTY stages (`SEED → SPEC → PLAN → EXECUTE`) to concrete stage tasks, artifacts, agent roles, and approval gates for software delivery. In this implementation, EXECUTE includes delivery and operations.
 
 ---
 
@@ -89,14 +89,14 @@ Examples (illustrative, not prescriptive):
 
 | Stage task | Agent | Output |
 |------------|-------|--------|
-| 0a. Intent | Human User (with AI Agent assistance per [core Section 11.2](../core-twtty-methodology.md#112-on-first-contact)) | `<project-folder>/seed/seed.md` — a copy of [`twtty/templates/seed-prompt-template.md`](../../templates/seed-prompt-template.md) with both required sections (`## What I Want To Build` and `## Done Looks Like`) completed. |
+| 0a. Intent | Human User (with AI Agent assistance per [core Section 11.2](../../core-twtty-methodology.md#112-on-first-contact)) | `<project-folder>/seed/seed.md` — a copy of [`twtty/templates/seed-prompt-template.md`](../../../templates/seed-prompt-template.md) with both required sections (`## What I Want To Build` and `## Done Looks Like`) completed. |
 
 **Stage exit gate (`SEED-EXIT`).** All four conditions MUST hold; the AI Agent MUST verify conditions 1–3 mechanically before requesting approval for condition 4:
 
 1. The file `<project-folder>/seed/seed.md` exists.
 2. The file contains both required `## What I Want To Build` and `## Done Looks Like` H2 sections.
 3. Neither section contains the template placeholder text (`[Describe your project...]`, `[How will you know it's complete?...]`) and both sections contain non-whitespace content.
-4. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5 — Replay-execution log format](../core-twtty-methodology.md#replay-execution-log-format)).
+4. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5 — Replay-execution log format](../../core-twtty-methodology.md#replay-execution-log-format)).
 
 **Replay-log entry on `SEED-EXIT`:**
 - `<stage>/<stage-task>` = `seed/0a`
@@ -107,8 +107,8 @@ Examples (illustrative, not prescriptive):
 
 | Stage task | Agent | Protocol | Output |
 |------------|-------|----------|--------|
-| 1a. Discovery interview | Spec Agent | Discovery (core [Section 4.1](../core-twtty-methodology.md#41-interview-me)) | Approved interview Q&A pairs recorded as `spec/1a` entries in the replay-execution log. No separate file is produced. |
-| 1b. Business requirements | Spec Agent | TWTTY loop (core [Section 11.5](../core-twtty-methodology.md#115-the-twtty-loop)) | Sections 1–4 (Goals, Stakeholders, Success metrics, Constraints) of `<project-folder>/spec/spec.md`, drafted from the [spec template](templates/spec-template.md). |
+| 1a. Discovery interview | Spec Agent | Discovery (core [Section 4.1](../../core-twtty-methodology.md#41-interview-me)) | Approved interview Q&A pairs recorded as `spec/1a` entries in the replay-execution log. No separate file is produced. |
+| 1b. Business requirements | Spec Agent | TWTTY loop (core [Section 11.5](../../core-twtty-methodology.md#115-the-twtty-loop)) | Sections 1–4 (Goals, Stakeholders, Success metrics, Constraints) of `<project-folder>/spec/spec.md`, drafted from the [spec template](templates/spec-template.md). |
 | 1c. Use cases | Spec Agent | TWTTY loop | Section 5 (Use cases) of `<project-folder>/spec/spec.md`. |
 | 1d. Technical specification | Spec Agent | TWTTY loop | Sections 6–8 (FR, NFR, Acceptance criteria) of `<project-folder>/spec/spec.md`. |
 
@@ -116,7 +116,7 @@ Acronyms used in the table: **FR** (Functional Requirements), **NFR** (Non-Funct
 
 > **Note:** `spec.md` is intentionally a single file (not split into separate documents). See the design-decision note at the top of the [spec template](templates/spec-template.md) for the rationale.
 
-For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-<release-id>.md` (see [core Section 11.3](../core-twtty-methodology.md#113-on-new-release-scope)).
+For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-<release-id>.md` (see [core Section 11.3](../../core-twtty-methodology.md#113-on-new-release-scope)).
 
 **Intra-stage stage tasks 1a, 1b, 1c.** Each is approved through its own protocol cycle (Discovery for 1a, TWTTY loop for 1b/1c) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 1d's approval triggers `SPEC-EXIT`.
 
@@ -126,7 +126,7 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 1. The file `<project-folder>/spec/spec.md` (or `<project-folder>/spec/spec-<release-id>.md` for a subsequent release) exists.
 2. The file passes every check in the [spec template's `SPEC-EXIT` validation checklist](templates/spec-template.md#spec-exit-validation-checklist).
-3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../core-twtty-methodology.md#replay-execution-log-format)).
+3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../../core-twtty-methodology.md#replay-execution-log-format)).
 
 **Replay-log entry shapes:**
 
@@ -148,15 +148,15 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 > **Note:** `plan.md` is intentionally a single file (not split into separate documents). See the design-decision note at the top of the [plan template](templates/plan-template.md) for the rationale.
 
-For subsequent Release Scopes, the artifact path is `<project-folder>/plan/plan-<release-id>.md` (see [core Section 11.3](../core-twtty-methodology.md#113-on-new-release-scope)).
+For subsequent Release Scopes, the artifact path is `<project-folder>/plan/plan-<release-id>.md` (see [core Section 11.3](../../core-twtty-methodology.md#113-on-new-release-scope)).
 
-**Intra-stage stage tasks 2a, 2b.** Each is approved through its own TWTTY loop cycle (core [Section 11.5](../core-twtty-methodology.md#115-the-twtty-loop)) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 2c's approval triggers `PLAN-EXIT`.
+**Intra-stage stage tasks 2a, 2b.** Each is approved through its own TWTTY loop cycle (core [Section 11.5](../../core-twtty-methodology.md#115-the-twtty-loop)) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 2c's approval triggers `PLAN-EXIT`.
 
 **Stage exit gate (`PLAN-EXIT`).** All three conditions MUST hold; the AI Agent MUST verify conditions 1–2 mechanically before requesting approval for condition 3:
 
 1. The file `<project-folder>/plan/plan.md` (or `<project-folder>/plan/plan-<release-id>.md` for a subsequent release) exists.
 2. The file passes every check in the [plan template's `PLAN-EXIT` validation checklist](templates/plan-template.md#plan-exit-validation-checklist).
-3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../core-twtty-methodology.md#replay-execution-log-format)).
+3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../../core-twtty-methodology.md#replay-execution-log-format)).
 
 **Replay-log entry shapes:**
 
@@ -190,7 +190,7 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/plan/plan-
 
 ## 4. Artifact locations
 
-SEED, SPEC, and PLAN artifacts are written to `<project-folder>/<stage>/` as defined in [core Section 5](../core-twtty-methodology.md#5-repository-layout). EXECUTE artifacts are written to their natural locations in the repository:
+SEED, SPEC, and PLAN artifacts are written to `<project-folder>/<stage>/` as defined in [core Section 5](../../core-twtty-methodology.md#5-repository-layout). EXECUTE artifacts are written to their natural locations in the repository:
 
 | Stage task | Canonical location |
 |------------|--------------------|
@@ -202,7 +202,7 @@ SEED, SPEC, and PLAN artifacts are written to `<project-folder>/<stage>/` as def
 | 3i Deployment, 3j Smoke tests | Pipeline definitions plus smoke-test scripts under `tests/smoke/` or pipeline-native |
 | 3k Monitoring, 3l Observability | Configuration under `infra/observability/` plus platform-native dashboards |
 
-The replay-execution log MUST be appended to throughout all stages using the entry format defined in [core Section 5 — Replay-execution log format](../core-twtty-methodology.md#replay-execution-log-format).
+The replay-execution log MUST be appended to throughout all stages using the entry format defined in [core Section 5 — Replay-execution log format](../../core-twtty-methodology.md#replay-execution-log-format).
 
 ---
 
@@ -258,7 +258,7 @@ During the Plan stage, the Planning Agent guides the user through establishing i
 
 ## 7. Risk enforcement profile
 
-This profile defines how the SDLC implementation enforces TWTTY at each [risk level](../core-twtty-methodology.md#8-risk-calibration). It is the single source of truth for which stage tasks apply, gate strictness, and agent context isolation per level.
+This profile defines how the SDLC implementation enforces TWTTY at each [risk level](../../core-twtty-methodology.md#8-risk-calibration). It is the single source of truth for which stage tasks apply, gate strictness, and agent context isolation per level.
 
 | Level | Applicable EXECUTE stage tasks | Gate strictness | Agent context isolation |
 |:-----:|--------------------------------|-----------------|-------------------------|
@@ -270,7 +270,7 @@ This profile defines how the SDLC implementation enforces TWTTY at each [risk le
 
 SPEC and PLAN stage tasks apply at every level. The Planning Agent MAY combine them at levels 1–2 where appropriate.
 
-If the runtime cannot satisfy the isolation or gate requirements for the confirmed risk level, the agent MUST escalate per [core Section 9](../core-twtty-methodology.md#9-failure-handling).
+If the runtime cannot satisfy the isolation or gate requirements for the confirmed risk level, the agent MUST escalate per [core Section 9](../../core-twtty-methodology.md#9-failure-handling).
 
 ---
 
@@ -285,7 +285,7 @@ These rules are specific to software delivery and extend (do not replace) the co
 
 ## 9. Execution rules
 
-These rules extend the core TWTTY rules ([Section 11.7](../core-twtty-methodology.md#117-rules)) with software-delivery specifics.
+These rules extend the core TWTTY rules ([Section 11.7](../../core-twtty-methodology.md#117-rules)) with software-delivery specifics.
 
 - **Follow GitHub Copilot best practices** for prompts and context engineering.
 - **Never skip a gate.** At risk levels 4–5, all gates MUST be enforced (see [Section 7](#7-risk-enforcement-profile)).

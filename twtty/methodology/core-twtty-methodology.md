@@ -58,7 +58,7 @@ SEED → SPEC → PLAN → EXECUTE
 - **Core TWTTY Specification** — The mandatory rules that apply in every domain. These include the stage order (`SEED -> SPEC -> PLAN -> EXECUTE`), Approval Gates, and replay-execution logging.
 - **Domain-specific implementation** — A domain-specific adaptation of the Core TWTTY Specification that defines stage tasks, required artifacts, and agent roles.
 
-This document is the Core TWTTY Specification. Domain-specific implementations are maintained separately. One software-delivery domain-specific implementation is available at [domain-specific-implementations/sdlc.md](domain-specific-implementations/sdlc.md).
+This document is the Core TWTTY Specification. Domain-specific implementations are maintained separately. One software-delivery domain-specific implementation is available at [domain-specific-implementations/sdlc/sdlc.md](domain-specific-implementations/sdlc/sdlc.md).
 
 Domain-specific implementations MAY extend the Core TWTTY Specification, but MUST NOT weaken approval rules, stage order, or traceability requirements.
 
@@ -109,7 +109,7 @@ The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative keywords in 
 | **Execute** | The stage where work is performed, validated, and iterated. |
 | **Replay-Execution Log** | A markdown log capturing every approved prompt and result across all stages and releases, including user modifications where applicable. Acts as both project history and a reference template for similar future work. See [Limitations](#10-limitations) for caveats on direct replay. The default location is a single file at `<project-folder>/replay-execution/replay-execution.md`; the log MAY be chunked into multiple time-period files under `<project-folder>/replay-execution/` per [Section 5 — Replay-execution log format](#replay-execution-log-format). |
 | **Agent Role** | A specialized AI responsibility used in execution (for example, Spec Agent or Implementation Agent). Whether Agent Roles share a single AI context or run in isolated contexts is determined by the active domain-specific implementation and the project's risk level (see [Section 8](#8-risk-calibration)). |
-| **Domain-specific implementation** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active implementation is selected from `twtty/methodology/domain-specific-implementations/<implementation>.md` (for example, `twtty/methodology/domain-specific-implementations/sdlc.md`). |
+| **Domain-specific implementation** | A domain-specific mapping of the four core stages to concrete stage tasks, artifacts, and agent roles. The active implementation is selected from `twtty/methodology/domain-specific-implementations/<implementation>/<implementation>.md` (for example, `twtty/methodology/domain-specific-implementations/sdlc/sdlc.md`). |
 | **Risk level** | A 1–5 calibration of the project's risk profile that determines how much process the pipeline enforces. See [Section 8](#8-risk-calibration). |
 
 Domain-specific terms (for example, software-delivery terms) are defined in each domain-specific implementation.
@@ -198,7 +198,11 @@ twtty/
   methodology/
     core-twtty-methodology.md                         (this spec — the normative core)
     domain-specific-implementations/
-      sdlc.md                                         (software-delivery implementation)
+      sdlc/
+        sdlc.md                                       (software-delivery implementation)
+        templates/
+          spec-template.md                            (artifact template for spec.md)
+          plan-template.md                            (artifact template for plan.md)
   templates/
     seed-prompt-template.md                           (template the Human User copies)
 ```
@@ -314,7 +318,7 @@ On resume ([Section 11.1](#111-on-resume)), the AI Agent MUST read every `replay
 
 Core TWTTY is runtime-agnostic. Runtime-specific mode and feature guidance is defined in the active domain-specific implementation.
 
-For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc.md`.
+For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc/sdlc.md`.
 
 ---
 
@@ -322,7 +326,7 @@ For the software-delivery implementation, see `twtty/methodology/domain-specific
 
 Guardrail definitions are implementation-specific and are owned by the active domain-specific implementation.
 
-For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc.md`.
+For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc/sdlc.md`.
 
 ---
 
@@ -453,7 +457,7 @@ Follow the table in [Section 9](#9-failure-handling). Never proceed on assumptio
 - **One recorded entry per approved prompt-and-result** to preserve atomic, traceable history.
 - **When uncertain, ask.** Do not assume.
 
-Implementations MAY define additional execution rules (workflow, tooling, runtime, and gate-enforcement behavior). For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc.md`.
+Implementations MAY define additional execution rules (workflow, tooling, runtime, and gate-enforcement behavior). For the software-delivery implementation, see `twtty/methodology/domain-specific-implementations/sdlc/sdlc.md`.
 
 ---
 

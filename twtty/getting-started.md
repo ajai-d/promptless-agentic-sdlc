@@ -36,7 +36,7 @@ Use [`templates/seed-prompt-template.md`](./templates/seed-prompt-template.md) a
 Choose the domain-specific implementation the project will use.
 
 Default example:
-- [`methodology/domain-specific-implementations/sdlc.md`](./methodology/domain-specific-implementations/sdlc.md)
+- [`methodology/domain-specific-implementations/sdlc/sdlc.md`](./methodology/domain-specific-implementations/sdlc/sdlc.md)
 
 ---
 
@@ -47,7 +47,7 @@ Give this prompt to your AI Agent.
 >
 > Project seed: `<project-folder>/seed/seed.md`
 >
-> Active domain-specific implementation: `twtty/methodology/domain-specific-implementations/sdlc.md` (example)
+> Active domain-specific implementation: `twtty/methodology/domain-specific-implementations/sdlc/sdlc.md` (example)
 
 You're off to the races.
 
@@ -59,4 +59,4 @@ You're off to the races.
 |------|---------|
 | [`methodology/core-twtty-methodology.md`](./methodology/core-twtty-methodology.md) | The methodology — what the agent reads |
 | [`templates/seed-prompt-template.md`](./templates/seed-prompt-template.md) | Example template — use to create `<project-folder>/seed/seed.md` |
-| [`methodology/domain-specific-implementations/sdlc.md`](./methodology/domain-specific-implementations/sdlc.md) | Example domain-specific implementation — use as the active implementation input |
+| [`methodology/domain-specific-implementations/sdlc/sdlc.md`](./methodology/domain-specific-implementations/sdlc/sdlc.md) | Example domain-specific implementation — use as the active implementation input |

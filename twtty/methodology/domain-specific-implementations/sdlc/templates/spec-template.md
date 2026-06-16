@@ -6,7 +6,7 @@
 >
 > The eight sections are tightly coupled: FRs reference use cases, ACs reference FRs/NFRs, and the `SPEC-EXIT` validation checklist enforces cross-section traceability (no orphan FRs/NFRs; every AC traces to ≥1 requirement). Splitting these into separate files would weaken that traceability — the checklist would have to walk multiple files and resolve cross-file references, adding moving parts and failure modes for no readability benefit (a large project's use cases are large whether they live in `spec.md` Section 5 or a separate `use-cases.md`).
 >
-> Reproducibility at the acceptance-criteria level (per [core Section 11.7](../../core-twtty-methodology.md#117-rules)) depends on the spec being one coherent contract. Do not split this file.
+> Reproducibility at the acceptance-criteria level (per [core Section 11.7](../../../core-twtty-methodology.md#117-rules)) depends on the spec being one coherent contract. Do not split this file.
 >
 > Note: [SDLC Section 3.3](../sdlc.md#33-plan) follows the same single-file pattern: a single `plan.md` with sections for Architecture, Design, and Orchestration. The `PLAN-EXIT` checklist enforces cross-section traceability (every design item maps to an architecture component; every work item traces to architecture or to a spec FR/NFR), which is simpler with one file.
 
@@ -64,7 +64,7 @@
 
 ## 8. Acceptance criteria
 
-[Acceptance Criteria: objectively verifiable pass/fail conditions per [core Section 11.7](../../core-twtty-methodology.md#117-rules). One per line, ID-prefixed as `AC-<n>`. Each AC MUST trace to one or more FR/NFR via a `Traces to:` line. Vague terms ("fast", "user-friendly", "robust") are prohibited.]
+[Acceptance Criteria: objectively verifiable pass/fail conditions per [core Section 11.7](../../../core-twtty-methodology.md#117-rules). One per line, ID-prefixed as `AC-<n>`. Each AC MUST trace to one or more FR/NFR via a `Traces to:` line. Vague terms ("fast", "user-friendly", "robust") are prohibited.]
 
 - **AC-1:** [criterion stated as pass/fail]
   - **Traces to:** FR-1
@@ -87,4 +87,4 @@ The AI Agent MUST verify all of the following mechanically before requesting `SP
 8. Section 8 contains at least one AC; every AC has a unique `AC-<n>` ID and a `Traces to:` line referencing at least one valid FR or NFR ID.
 9. Every `FR-<n>` declared in Section 6 is referenced by at least one AC in Section 8 (no orphan FRs).
 10. Every `NFR-<n>` declared in Section 7 (if any) is referenced by at least one AC in Section 8 (no orphan NFRs).
-11. No AC contains the prohibited vague terms `fast`, `user-friendly`, `robust`, `easy`, `simple`, `intuitive` (case-insensitive whole-word match) per [core Section 11.7](../../core-twtty-methodology.md#117-rules).
+11. No AC contains the prohibited vague terms `fast`, `user-friendly`, `robust`, `easy`, `simple`, `intuitive` (case-insensitive whole-word match) per [core Section 11.7](../../../core-twtty-methodology.md#117-rules).
