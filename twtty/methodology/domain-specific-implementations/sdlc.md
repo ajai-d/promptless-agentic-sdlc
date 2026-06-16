@@ -142,11 +142,29 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 | Stage task | Agent | Output |
 |------------|-------|--------|
-| 2a. Architecture | Architecture Agent | System design, components, and technology choices |
-| 2b. Design | Design Agent | Interfaces, contracts, data models |
-| 2c. Orchestration | Planning Agent | Work breakdown, ordering, and mode assignments |
+| 2a. Architecture | Architecture Agent | Section 1 (Architecture) of `<project-folder>/plan/plan.md`, drafted from the [plan template](templates/plan-template.md). |
+| 2b. Design | Design Agent | Section 2 (Design) of `<project-folder>/plan/plan.md`. |
+| 2c. Orchestration | Planning Agent | Section 3 (Orchestration) of `<project-folder>/plan/plan.md`. |
 
-**Stage exit gate:** Approval of 2c Orchestration — `plan/plan.md` (or `plan/plan-<release-id>.md`).
+> **Note:** `plan.md` is intentionally a single file (not split into separate documents). See the design-decision note at the top of the [plan template](templates/plan-template.md) for the rationale.
+
+For subsequent Release Scopes, the artifact path is `<project-folder>/plan/plan-<release-id>.md` (see [core Section 11.3](../core-twtty-methodology.md#113-on-new-release-scope)).
+
+**Intra-stage stage tasks 2a, 2b.** Each is approved through its own TWTTY loop cycle (core [Section 11.5](../core-twtty-methodology.md#115-the-twtty-loop)) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 2c's approval triggers `PLAN-EXIT`.
+
+**Stage exit gate (`PLAN-EXIT`).** All three conditions MUST hold; the AI Agent MUST verify conditions 1–2 mechanically before requesting approval for condition 3:
+
+1. The file `<project-folder>/plan/plan.md` (or `<project-folder>/plan/plan-<release-id>.md` for a subsequent release) exists.
+2. The file passes every check in the [plan template's `PLAN-EXIT` validation checklist](templates/plan-template.md#plan-exit-validation-checklist).
+3. The Human User's `Approval outcome` is `Approved` or `Approved with changes` (per [core Section 5](../core-twtty-methodology.md#replay-execution-log-format)).
+
+**Replay-log entry shapes:**
+
+| Stage task | `<stage>/<stage-task>` | `<approval-gate-name>` | `Artifact / path changed` |
+|------------|------------------------|------------------------|---------------------------|
+| 2a | `plan/2a` | `—` | `<project-folder>/plan/plan.md` (or `plan-<release-id>.md`) |
+| 2b | `plan/2b` | `—` | `<project-folder>/plan/plan.md` (or `plan-<release-id>.md`) |
+| 2c (final) | `plan/2c` | `PLAN-EXIT` | `<project-folder>/plan/plan.md` (or `plan-<release-id>.md`) |
 
 ### 3.4 Execute
 
