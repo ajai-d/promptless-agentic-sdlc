@@ -72,6 +72,19 @@ The EXECUTE stage tasks listed above are the **default** set. The Planning Agent
 
 ## 3. Stage and stage task details
 
+### Default agent as orchestrator
+
+The default Copilot agent applies the TWTTY method recursively. Before producing the artifact for any stage task, the default agent decides whether the named ROLE (e.g., "Spec Agent", "Architecture Agent", "Setup Agent") is fulfilled by the default agent itself or by a custom Copilot agent at `.github/agents/<name>.agent.md`. If a custom agent is needed, the default agent configures it through a TWTTY loop and records the decision in the replay-execution log before the role-bearing work begins. **Agent column names in stage-task tables denote ROLES, not mandated identities** — this principle applies across §3.1 Seed, §3.2 Spec, §3.3 Plan, and §3.4 Execute.
+
+> **For the Human User: this is invisible by default.** The default agent makes agent-selection decisions on your behalf, asks plain-language questions when it needs your input, and only surfaces custom-agent configuration when there is a clear benefit (e.g., a specialized domain, repeated work, or strict tool restrictions). The terms "default agent", "custom agent", "ROLE", and "TWTTY loop" are internal vocabulary — you should never have to learn them to use this methodology. If the default agent ever asks you about agent configuration, it MUST explain *why* in plain language and offer to proceed with the default agent if you prefer not to engage with the question.
+
+Examples (illustrative, not prescriptive):
+
+- **Seed (3.1)**: usually fulfilled by the default agent — small, conversational, no specialization needed.
+- **Spec (3.2)**: default agent often suffices; a custom Spec Agent may help on large or regulated projects.
+- **Plan (3.3)**: a project with multiple architects may benefit from separate Architecture, Design, and Planning agents; a small project rarely does.
+- **Execute (3.4)**: separate Setup, Test, Security, and Deploy agents may pay off when the project is large enough that tool restrictions and specialized instructions reduce errors. Otherwise, the default agent handles the lifecycle.
+
 ### 3.1 Seed
 
 | Stage task | Agent | Output |
