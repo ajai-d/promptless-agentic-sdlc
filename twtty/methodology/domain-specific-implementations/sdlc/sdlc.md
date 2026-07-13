@@ -107,7 +107,7 @@ Examples (illustrative, not prescriptive):
 
 | Stage task | Agent | Protocol | Output |
 |------------|-------|----------|--------|
-| 1a. Discovery interview | Spec Agent | Discovery (core [Section 4.1](../../core-twtty-methodology.md#41-interview-me)) | Approved interview Q&A pairs recorded as `spec/1a` entries in the replay-execution log. No separate file is produced. |
+| 1a. Discovery interview | Spec Agent | Discovery (core [Section 4.1](../../core-twtty-methodology.md#41-interview-me)) | Elicited context held in the agent's working memory. Per [core Section 4.1](../../core-twtty-methodology.md#41-interview-me), individual Q&A pairs MUST NOT be logged; 1a produces exactly one replay-log entry, recorded on interview termination (see below). |
 | 1b. Business requirements | Spec Agent | TWTTY loop (core [Section 11.5](../../core-twtty-methodology.md#115-the-twtty-loop)) | Sections 1–4 (Goals, Stakeholders, Success metrics, Constraints) of `<project-folder>/spec/spec.md`, drafted from the [spec template](templates/spec-template.md). |
 | 1c. Use cases | Spec Agent | TWTTY loop | Section 5 (Use cases) of `<project-folder>/spec/spec.md`. |
 | 1d. Technical specification | Spec Agent | TWTTY loop | Sections 6–8 (FR, NFR, Acceptance criteria) of `<project-folder>/spec/spec.md`. |
@@ -120,7 +120,7 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 **Intra-stage stage tasks 1a, 1b, 1c.** Each is approved through its own protocol cycle (Discovery for 1a, TWTTY loop for 1b/1c) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 1d's approval triggers `SPEC-EXIT`.
 
-**Discovery interview (1a) termination.** The interview MUST end with an explicit termination prompt approved by the Human User. The Spec Agent proposes: *"End of discovery; proceed to 1b Business requirements."* On approval, the agent appends a replay-log entry (`spec/1a`, `<approval-gate-name>` = `—`, `Execution outcome:` = `end of discovery`). 1b MUST NOT start before this entry is recorded.
+**Discovery interview (1a) termination.** The interview MUST end with an explicit termination prompt approved by the Human User. The Spec Agent proposes: *"End of discovery; proceed to 1b Business requirements."* On approval, the agent appends exactly one replay-log entry for 1a (`spec/1a`, `<approval-gate-name>` = `—`, `Execution outcome:` = `end of discovery`, `Artifact / path changed:` = `—`). This is the only `spec/1a` log entry produced; per [core Section 4.1](../../core-twtty-methodology.md#41-interview-me) individual Q&A pairs MUST NOT be logged. 1b MUST NOT start before this entry is recorded.
 
 **Stage exit gate (`SPEC-EXIT`).** All three conditions MUST hold; the AI Agent MUST verify conditions 1–2 mechanically before requesting approval for condition 3:
 
@@ -132,8 +132,7 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 | Stage task | `<stage>/<stage-task>` | `<approval-gate-name>` | `Artifact / path changed` |
 |------------|------------------------|------------------------|---------------------------|
-| 1a (per Q&A pair) | `spec/1a` | `—` | `<project-folder>/replay-execution/<file>.md` |
-| 1a (termination) | `spec/1a` | `—` | `<project-folder>/replay-execution/<file>.md` |
+| 1a (termination, only entry) | `spec/1a` | `—` | `—` |
 | 1b | `spec/1b` | `—` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
 | 1c | `spec/1c` | `—` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
 | 1d (final) | `spec/1d` | `SPEC-EXIT` | `<project-folder>/spec/spec.md` (or `spec-<release-id>.md`) |
