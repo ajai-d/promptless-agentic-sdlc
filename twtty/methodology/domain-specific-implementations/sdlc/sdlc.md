@@ -167,23 +167,59 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/plan/plan-
 
 ### 3.4 Execute
 
-| Stage task | Agent | Output |
-|------------|-------|--------|
-| 3a. Setup | Setup Agent | Repository and environment ready |
-| 3b. Implement | Implementation Agent | Working software increments |
-| 3c. Code review | Code Review Agent | Quality and maintainability review |
-| 3d. Code scanning | Code Scanning Agent | SAST, dependency, and license results |
-| 3e. Security | Security Agent | Threat modeling and security checks |
-| 3f. Test | Test Agent | Unit, integration, and end-to-end results |
-| 3g. CI/CD pipeline | Deployment Agent | Build and deployment automation |
-| 3h. Infrastructure as code | Deployment Agent | IaC templates |
-| 3i. Deployment | Deployment Agent | Running system in target environment |
-| 3j. Smoke tests | Deployment Agent | Post-deploy validation |
-| 3k. Monitoring | Monitoring Agent | Alerts and dashboards |
-| 3l. Observability | Observability Agent | Logs, metrics, and traces |
-| 3m. Iteration | Human + Agents | Feedback and next-cycle updates |
+| Stage task | Agent | Protocol | Output |
+|------------|-------|----------|--------|
+| 3a. Setup | Setup Agent | TWTTY loop (core [Section 11.5](../../core-twtty-methodology.md#115-the-twtty-loop)) | Repository initialized, toolchain installed, integration branch created. Executed **once per release**. |
+| 3b. Implement | Implementation Agent | TWTTY loop | Working software increment for one `W-<n>`, produced on a work-item branch. Executed **once per `W-<n>`**. |
+| 3c. Code review | Code Review Agent | TWTTY loop | Quality and maintainability review on the work-item branch. Executed **once per `W-<n>`**. |
+| 3d. Code scanning | Code Scanning Agent | TWTTY loop | SAST, dependency, and license results on the work-item branch. Executed **once per `W-<n>`**. |
+| 3e. Security | Security Agent | TWTTY loop | Threat-model check and security scans on the work-item branch. Executed **once per `W-<n>`**. |
+| 3f. Test | Test Agent | TWTTY loop | Unit, integration, and end-to-end results on the work-item branch. Every AC-referenced test MUST pass before merge. Executed **once per `W-<n>`**. |
+| 3g. CI/CD pipeline | Deployment Agent | TWTTY loop | Build and deployment automation (workflows under `.github/workflows/`). Executed **once per release**; MAY be extended per-`W-<n>` when the work item introduces a new pipeline. |
+| 3h. Infrastructure as code | Deployment Agent | TWTTY loop | IaC templates under `infra/`. Executed **release-level** by default; **per-`W-<n>`** when the work item touches infrastructure. |
+| 3i. Deployment | Deployment Agent | TWTTY loop | Running system in the target environment (post-merge). Executed **once per `W-<n>`**. |
+| 3j. Smoke tests | Deployment Agent | TWTTY loop | Post-deploy validation. Executed **once per `W-<n>` deployment**. |
+| 3k. Monitoring | Monitoring Agent | TWTTY loop | Alerts and dashboards. Executed **once per release**. |
+| 3l. Observability | Observability Agent | TWTTY loop | Logs, metrics, and traces wiring. Executed **once per release**. |
+| 3m. Iteration | Human + Agents | TWTTY loop | Feedback capture and release closeout. Executed **once per release**; this stage task's approval triggers `EXECUTE-EXIT`. |
 
-**Stage exit gate:** Acceptance criteria met, deployment validated, monitoring and observability live, and outcomes recorded in the replay-execution log.
+Acronyms used in the table: **IaC** (Infrastructure as Code), **SAST** (Static Application Security Testing), **CI/CD** (Continuous Integration / Continuous Delivery), **PR** (Pull Request), **W-<n>** (a work item declared in `plan.md` §3.1).
+
+**Work-item lifecycle.** EXECUTE combines *release-level* stage tasks (executed once per release: 3a, 3g, 3h when release-level, 3k, 3l, 3m) with *per-work-item* stage tasks (executed once per `W-<n>` declared in `plan.md` §3.1). For each `W-<n>`, per-work-item sub-stages run in this order: **3b → {3c, 3d, 3e, 3f} → merge PR → 3g/3h (if extended for this item) → 3i → 3j**. The bracketed sub-stages MAY run in parallel where the runtime allows.
+
+**Work-tracking source of truth.** Each `W-<n>` MUST map to a git branch and a pull request whose title starts with `W-<n>`. Every commit message on the branch MUST reference `W-<n>` in the subject line. External issue trackers (GitHub Issues, Jira, Linear, etc.) MAY mirror `W-<n>` items but MUST NOT replace `plan.md` as the source of truth. See [Section 9 — Execution rules](#9-execution-rules) for the full PR-driven lifecycle.
+
+**Risk-level tailoring.** Which per-work-item sub-stages apply is determined by the confirmed risk level; see [Section 7 — Risk enforcement profile](#7-risk-enforcement-profile). §3.4 does not duplicate the pruning rules.
+
+**Replay-log entry ID convention.** Release-level entries use `<stage>/<stage-task>` = `execute/3a`, `execute/3k`, `execute/3l`, `execute/3m`. Per-work-item entries use `<stage>/<stage-task>` = `execute/<stage-task>/<W-id>` — for example, `execute/3b/W-5`, `execute/3f/W-5`. This convention keeps entries deterministic across many work items while preserving lexicographic order.
+
+**Intra-stage cycle clarification.** Every 3a–3l entry (release-level or per-work-item) uses `<approval-gate-name>` = `—`. Only the final 3m Iteration entry triggers `EXECUTE-EXIT`.
+
+**Stage exit gate (`EXECUTE-EXIT`).** All five conditions MUST hold; the AI Agent MUST verify conditions 1–4 mechanically before requesting approval for condition 5:
+
+1. Every `W-<n>` declared in `plan.md` §3.1 has a corresponding `execute/3b/W-<n>` replay-log entry with `Approval outcome` ∈ {`Approved`, `Approved with changes`}, or an `Abandon`/`Escalate` entry with resolution recorded in `Notes`.
+2. Every `AC-<n>` declared in `spec.md` §8 is referenced by at least one `execute/3f/W-<m>` replay-log entry whose `Execution outcome` records the AC as passing.
+3. Every applicable per-work-item sub-stage per §7 has a completed replay-log entry for every applicable `W-<n>`.
+4. Release-level sub-stages required by §7 have completed replay-log entries: `execute/3a` (all levels), and at applicable levels `execute/3k` and `execute/3l`.
+5. The Human User's `Approval outcome` on `execute/3m` is `Approved` or `Approved with changes` (per [core Section 5](../../core-twtty-methodology.md#replay-execution-log-format)).
+
+**Replay-log entry shapes:**
+
+| Stage task | `<stage>/<stage-task>` | `<approval-gate-name>` | `Artifact / path changed` |
+|------------|------------------------|------------------------|---------------------------|
+| 3a (release-level) | `execute/3a` | `—` | Repository initialization paths (e.g., `.gitignore`, `README.md`, toolchain configs) |
+| 3b (per-work-item) | `execute/3b/W-<n>` | `—` | Source files added or modified for `W-<n>` |
+| 3c (per-work-item) | `execute/3c/W-<n>` | `—` | Review artifact under `reports/` or `—` if review lives on the PR |
+| 3d (per-work-item) | `execute/3d/W-<n>` | `—` | Scan report path or `—` if platform-native (e.g., GitHub code scanning) |
+| 3e (per-work-item) | `execute/3e/W-<n>` | `—` | Security review artifact path or `—` if lives on the PR |
+| 3f (per-work-item) | `execute/3f/W-<n>` | `—` | Test tree paths modified or added |
+| 3g (release-level or per-work-item) | `execute/3g` or `execute/3g/W-<n>` | `—` | `.github/workflows/*` (or platform equivalent) |
+| 3h (release-level or per-work-item) | `execute/3h` or `execute/3h/W-<n>` | `—` | `infra/*` (or `iac/`, `terraform/`, `bicep/`) |
+| 3i (per-work-item) | `execute/3i/W-<n>` | `—` | `—` (deployment is a runtime event; `Execution outcome` records the deployed environment and version) |
+| 3j (per-work-item) | `execute/3j/W-<n>` | `—` | `tests/smoke/*` if new smoke tests were added, else `—` |
+| 3k (release-level) | `execute/3k` | `—` | `infra/observability/*` or platform-native dashboard paths |
+| 3l (release-level) | `execute/3l` | `—` | `infra/observability/*` or platform-native logging/tracing config |
+| 3m (release-level, final) | `execute/3m` | `EXECUTE-EXIT` | `—` (iteration is a closeout event; `Execution outcome` records the release completion summary) |
 
 ---
 
@@ -234,7 +270,7 @@ The Planning Agent selects the appropriate mode for each stage task.
 | **Custom Agents** | `.github/agents/<name>.md` | Each pipeline role is defined as a persistent custom agent with focused instructions, tools, and optional model selection. |
 | **Skills** | Per-agent skill declarations | Atomic actions (run tests, open PR, scan dependencies, generate docs, etc.). Agents declare which actions they need; the runtime invokes them when appropriate. Custom skills can be added per project. |
 | **AGENTS.md** | Repository root | Project-wide instructions that all agents read. Used to encode TWTTY conventions, workflow standards, and project context. |
-| **GitHub Issues** | Repository issue tracker | Work management backbone for EXECUTE: each non-trivial work item is tracked as an issue, then implemented through branch and PR flow. |
+| **GitHub Issues** *(optional)* | Repository issue tracker | Optional mirror of `W-<n>` work items from `plan.md` §3.1 for teams that want a kanban view. `plan.md` remains the source of truth; issues MUST NOT replace it. See [Section 9](#9-execution-rules). |
 | **Subagents** | Auto-spawned or `/agent <name>` | Isolated-context agents for specialized subtasks. Required for risk levels 4–5 (see [Section 7](#7-risk-enforcement-profile)). |
 | **Delegate** | `/delegate` | Hands off a fully specified work item to the GitHub Copilot Coding Agent (cloud, async) for issue-to-PR execution. |
 | **MCP Servers** | Per-agent configuration | Connects agents to external tools, data sources, or alternate models. |
@@ -278,7 +314,7 @@ If the runtime cannot satisfy the isolation or gate requirements for the confirm
 These rules are specific to software delivery and extend (do not replace) the core rules.
 
 - In this implementation, deployment and operations are part of EXECUTE, not separate top-level stages.
-- For software projects in GitHub, EXECUTE follows an issue-driven PR lifecycle: issue → branch → validate → pull request → review → merge.
+- For software projects in GitHub, EXECUTE follows a **PR-driven `W-<n>` lifecycle**: `plan.md` §3.1 `W-<n>` → branch → validate → pull request → review → merge → deploy. Each `W-<n>` maps to one branch and one PR whose title starts with `W-<n>`. Mirroring `W-<n>` items in a separate issue tracker (GitHub Issues, Jira, Linear, etc.) is OPTIONAL.
 
 ---
 
@@ -289,6 +325,6 @@ These rules extend the core TWTTY rules ([Section 11.7](../../core-twtty-methodo
 - **Follow GitHub Copilot best practices** for prompts and context engineering.
 - **Never skip a gate.** At risk levels 4–5, all gates MUST be enforced (see [Section 7](#7-risk-enforcement-profile)).
 - **Use branch-per-work-item and PR-based integration.** Direct push to the default branch MUST NOT be used unless the repository is explicitly operating in solo/direct-push mode.
-- **Use issue-based work management.** Each non-trivial execution item MUST map to a GitHub issue with clear scope, owner, and acceptance criteria.
+- **Use plan-based work management.** Each execution item MUST map to a `W-<n>` declared in `plan.md` §3.1 and MUST be executed via a branch and pull request whose title starts with `W-<n>`. Commit messages on the branch MUST reference `W-<n>` in the subject. Mirroring `W-<n>` items in an external issue tracker (GitHub Issues, Jira, Linear, etc.) is OPTIONAL; when mirrored, the mirror MUST reference the `W-<n>` ID and MUST NOT be treated as the source of truth.
 - **Guide the user through tooling.** When a stage task requires a specific Copilot mode or feature, walk the user through the configuration step by step.
 - **Honor the risk level.** Use the context-isolation and gate-strictness defined in [Section 7](#7-risk-enforcement-profile) for the confirmed risk level.
