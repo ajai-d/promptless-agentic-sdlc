@@ -309,7 +309,7 @@ Approved guardrails from each category are captured in the corresponding section
 
 ## 7. Risk enforcement profile
 
-This profile defines how the SDLC implementation enforces TWTTY at each [risk level](../../core-twtty-methodology.md#8-risk-calibration). It is the single source of truth for which stage tasks apply, gate strictness, and agent context isolation per level.
+This profile defines how the SDLC implementation enforces TWTTY at each [risk level](../../core-twtty-methodology.md#8-risk-calibration). It is the single source of truth for the **minimum** EXECUTE stage tasks that MUST apply, gate strictness, and agent context isolation per level. The Planning Agent MAY add additional stage tasks beyond the minimum when the project requires them (for example, adding 3i Deployment to a level-1 project that needs to go live).
 
 | Level | Applicable EXECUTE stage tasks | Gate strictness | Agent context isolation |
 |:-----:|--------------------------------|-----------------|-------------------------|
