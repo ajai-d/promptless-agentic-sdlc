@@ -1,6 +1,6 @@
 # Build Apps with AI without writing anything — not even prompts
 
-Build production-grade applications using AI agents without writing prompts or configuring anything. You describe your idea at a high level; the AI agent interviews you, drafts a spec, plans the work, writes the code, tests it, and ships it — checking with you at every step.
+Build production-grade applications using AI agents without writing prompts or configuring anything. You describe your idea at a high level in a seed and AI takes over — the AI agent interviews you, drafts a spec, plans the work, writes the code, tests it, and ships it — checking with you at every step.
 
 ## About the methodology
 
