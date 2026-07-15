@@ -4,7 +4,7 @@ Build production-grade applications using AI agents without writing prompts or c
 
 ## About the methodology
 
-TWTTY is a methodology for working with AI agents that removes the burden of prompt engineering. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next step and the prompt to execute it. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
+TWTTY (Tell Me What To Tell You) is a methodology for working with AI agents that removes the burden of prompt engineering or any kind of configuration related to Agentic software development. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next step and the prompt to execute it. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
 
 See [`core-twtty-methodology.md`](./twtty/methodology/core-twtty-methodology.md) for the full specification.
 
