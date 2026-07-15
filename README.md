@@ -29,7 +29,9 @@ Inside your project folder, create `seed/seed.md`. Use [this template](./twtty/t
 - **What I Want To Build** — your idea.
 - **Done Looks Like** — how you'll know it's finished.
 
-### 3. Give this exact prompt to GitHub Copilot
+### 3. Open a new GitHub Copilot Chat in this workspace and paste this exact prompt
+
+Use a fresh chat (not one you've been using for other work) so the AI starts with no prior context.
 
 ```text
 Read agentic-dev-scafolding/twtty/methodology/core-twtty-methodology.md and follow the TWTTY methodology.
