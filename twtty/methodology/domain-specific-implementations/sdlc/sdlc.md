@@ -229,13 +229,15 @@ SEED, SPEC, and PLAN artifacts are written to `<project-folder>/<stage>/` as def
 
 | Stage task | Canonical location |
 |------------|--------------------|
-| 3a Setup, 3b Implement | Project source tree (e.g., `src/`, language-conventional layout) |
+| 3a Setup | Repository initialization at repo root (e.g., `.gitignore`, `README.md`, toolchain configs, integration branch) |
+| 3b Implement | Project source tree (e.g., `src/`, language-conventional layout) |
 | 3c Code review, 3d Code scanning, 3e Security | Tooling reports under `reports/` or platform-native (e.g., GitHub code scanning) |
 | 3f Test | Test tree (e.g., `tests/`, `__tests__/`, language-conventional) |
 | 3g CI/CD pipeline | `.github/workflows/` (or platform-equivalent) |
 | 3h Infrastructure as code | `infra/` (or `iac/`, `terraform/`, `bicep/` as appropriate) |
 | 3i Deployment, 3j Smoke tests | Pipeline definitions plus smoke-test scripts under `tests/smoke/` or pipeline-native |
 | 3k Monitoring, 3l Observability | Configuration under `infra/observability/` plus platform-native dashboards |
+| Customization surfaces (per §5.2) | Copilot-runtime paths per current Copilot documentation |
 
 The replay-execution log MUST be appended to throughout all stages using the entry format defined in [core Section 5 — Replay-execution log format](../../core-twtty-methodology.md#replay-execution-log-format).
 
@@ -295,6 +297,14 @@ During the Plan stage, the Planning Agent guides the user through establishing i
 | **Operations** | CI/CD pipelines, environment parity, observability |
 | **Process** | Change-management conventions, branch strategy, approval workflows |
 
+Approved guardrails from each category are captured in the corresponding sections of `plan.md` per the [plan template](templates/plan-template.md):
+
+- **Security** → plan §1.4 Security architecture and §2.4 Security design
+- **Quality** → plan §1.6 Test architecture and §2.5 Test design
+- **Architecture** → plan §1.1 Application architecture and §2.1 Application design
+- **Operations** → plan §1.3 Infrastructure architecture and §2.3 Infrastructure design
+- **Process** → captured in plan §3 Orchestration (§3.1 work items and §3.2 sequencing) and reinforced by §8 SDLC-specific rules and §9 Execution rules of this document
+
 ---
 
 ## 7. Risk enforcement profile
@@ -306,10 +316,12 @@ This profile defines how the SDLC implementation enforces TWTTY at each [risk le
 | **1** | 3a, 3b, 3f | Stage exit gates only | Shared context |
 | **2** | Level 1 + 3c, 3g | Stage exit gates only | Shared context |
 | **3** | Level 2 + 3d, 3i, 3j, 3k | Stage exit gates; stage task gates SHOULD apply | Shared context acceptable |
-| **4** | Full EXECUTE set (3a–3m) | Stage exit and stage task gates MUST be enforced | Each agent role MUST run in an isolated context (subagent or custom agent) |
-| **5** | Full EXECUTE set + formal review gates + external controls where required | All gates MUST be enforced and MUST NOT be skipped | Each agent role MUST run in an isolated context |
+| **4** | Full EXECUTE set (3a–3m) | Stage exit and stage task gates MUST be enforced | Each agent role MUST run in an isolated context (per current Copilot documentation) |
+| **5** | Full EXECUTE set with external regulatory controls where required | All gates MUST be enforced and MUST NOT be skipped | Each agent role MUST run in an isolated context |
 
-SPEC and PLAN stage tasks apply at every level. The Planning Agent MAY combine them at levels 1–2 where appropriate.
+SPEC and PLAN stage tasks apply at every level.
+
+**Solo/direct-push mode (level 1 only).** At level 1 (throwaway prototype), the repository MAY operate in solo/direct-push mode: work items MUST still map to `W-<n>` in `plan.md` §3.1 and MUST be referenced in commit messages, but the branch-per-`W-<n>` and PR-based integration requirements of §9 are relaxed. Direct commits to the default branch are acceptable. At levels 2 and above, the full PR-driven `W-<n>` lifecycle per §9 MUST be followed.
 
 If the runtime cannot satisfy the isolation or gate requirements for the confirmed risk level, the agent MUST escalate per [core Section 9](../../core-twtty-methodology.md#9-failure-handling).
 
@@ -328,9 +340,7 @@ These rules are specific to software delivery and extend (do not replace) the co
 
 These rules extend the core TWTTY rules ([Section 11.7](../../core-twtty-methodology.md#117-rules)) with software-delivery specifics.
 
-- **Follow GitHub Copilot best practices** for prompts and context engineering.
 - **Never skip a gate.** At risk levels 4–5, all gates MUST be enforced (see [Section 7](#7-risk-enforcement-profile)).
-- **Use branch-per-work-item and PR-based integration.** Direct push to the default branch MUST NOT be used unless the repository is explicitly operating in solo/direct-push mode.
+- **Use branch-per-work-item and PR-based integration.** Direct push to the default branch MUST NOT be used unless the repository is explicitly operating in solo/direct-push mode (see [Section 7](#7-risk-enforcement-profile)).
 - **Use plan-based work management.** Each execution item MUST map to a `W-<n>` declared in `plan.md` §3.1 and MUST be executed via a branch and pull request whose title starts with `W-<n>`. Commit messages on the branch MUST reference `W-<n>` in the subject. Mirroring `W-<n>` items in an external issue tracker (GitHub Issues, Jira, Linear, etc.) is OPTIONAL; when mirrored, the mirror MUST reference the `W-<n>` ID and MUST NOT be treated as the source of truth.
-- **Guide the user through tooling.** When a stage task requires a specific Copilot mode or feature, walk the user through the configuration step by step.
 - **Honor the risk level.** Use the context-isolation and gate-strictness defined in [Section 7](#7-risk-enforcement-profile) for the confirmed risk level.
