@@ -194,7 +194,6 @@ Used by **every non-discovery Agent Role** in the pipeline. These Agent Roles br
 
 ```text
 twtty/
-  getting-started.md                                  (human-facing quick start)
   methodology/
     core-twtty-methodology.md                         (this spec — the normative core)
     domain-specific-implementations/
@@ -465,7 +464,7 @@ Implementations MAY define additional execution rules (workflow, tooling, runtim
 
 | To... | See... |
 |-------|--------|
-| Start building | [`../getting-started.md`](../getting-started.md) |
+| Start building | [`../../README.md`](../../README.md) |
 | Create a seed prompt | [`../templates/seed-prompt-template.md`](../templates/seed-prompt-template.md) |
 
 ---
