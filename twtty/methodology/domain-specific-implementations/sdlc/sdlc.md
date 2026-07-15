@@ -74,9 +74,9 @@ The EXECUTE stage tasks listed above are the **default** set. The Planning Agent
 
 ### Default agent as orchestrator
 
-The default Copilot agent applies the TWTTY method recursively. Before producing the artifact for any stage task, the default agent decides whether the named ROLE (e.g., "Spec Agent", "Architecture Agent", "Setup Agent") is fulfilled by the default agent itself or by a custom Copilot agent at `.github/agents/<name>.agent.md`. If a custom agent is needed, the default agent configures it through a TWTTY loop and records the decision in the replay-execution log before the role-bearing work begins. **Agent column names in stage-task tables denote ROLES, not mandated identities** — this principle applies across §3.1 Seed, §3.2 Spec, §3.3 Plan, and §3.4 Execute.
+The default Copilot agent applies the TWTTY method recursively. Before producing the artifact for any stage task, the default agent decides which Copilot customization surface is needed — instructions files, custom agents, skills, MCP servers, hooks, or prompt files (see §5.2) — and configures it through a TWTTY loop, recording each configuration decision in the replay-execution log. In particular, the ROLE column of stage-task tables (e.g., "Spec Agent", "Architecture Agent", "Setup Agent") may be fulfilled by the default agent itself or by a dedicated Copilot custom agent that the default agent configures on demand. **Agent column names in stage-task tables denote ROLES, not mandated identities** — this principle applies across §3.1 Seed, §3.2 Spec, §3.3 Plan, and §3.4 Execute.
 
-> **For the Human User: this is invisible by default.** The default agent makes agent-selection decisions on your behalf, asks plain-language questions when it needs your input, and only surfaces custom-agent configuration when there is a clear benefit (e.g., a specialized domain, repeated work, or strict tool restrictions). The terms "default agent", "custom agent", "ROLE", and "TWTTY loop" are internal vocabulary — you should never have to learn them to use this methodology. If the default agent ever asks you about agent configuration, it MUST explain *why* in plain language and offer to proceed with the default agent if you prefer not to engage with the question.
+> **For the Human User: this is invisible by default.** The default agent makes customization decisions on your behalf and only surfaces them when it needs your input — specifically when a customization crosses a trust boundary. A trust boundary is crossed when the customization installs an MCP server, adds a hook that runs shell commands, or grants an agent tools that read/write files outside the workspace root, execute shell commands, make network requests to non-project domains, or modify user or system settings. All other decisions (instructions, prompt files, skills, and low-risk custom agents) are silent; the created files are always visible in the repository for later review. The terms "default agent", "custom agent", "customization surface", "ROLE", and "TWTTY loop" are internal vocabulary — you should never have to learn them to use this methodology. If the default agent ever asks you about a customization, it MUST explain *why* in plain language and offer to proceed with a safe default if you prefer not to engage with the question.
 
 Examples (illustrative, not prescriptive):
 
@@ -254,26 +254,32 @@ Each agent in the pipeline is a role played by the chosen runtime. Context-isola
 
 ### 5.1 Agent modes
 
-The Planning Agent selects the appropriate mode for each stage task.
+The default agent selects the appropriate mode for each stage task, subject to the risk enforcement profile in [§7](#7-risk-enforcement-profile). Refer to current Copilot documentation for available modes and how to invoke them.
 
 | Mode | Description | TWTTY usage |
 |------|-------------|--------------|
 | **Interactive** *(default)* | The user explicitly approves each tool action. | The default for every stage. Implements the TWTTY loop. |
 | **Autopilot** | The agent runs fully autonomously without approval prompts. | Used when the spec is precise and the work is low risk. |
 | **Plan** | The agent generates a multi-step plan, waits for user approval, then executes. | Used during the Plan stage. |
-| **Fleet** (`/fleet`) | The agent decomposes work into parallel subtasks executed by subagents. | Used when work items are independent and can run concurrently. |
+| **Fleet** | The agent decomposes work into parallel subtasks executed by subagents. | Used when work items are independent and can run concurrently. |
 
-### 5.2 Runtime features
+### 5.2 Customization surfaces and runtime features
 
-| Feature | Command / Location | TWTTY usage |
-|---------|--------------------|--------------|
-| **Custom Agents** | `.github/agents/<name>.md` | Each pipeline role is defined as a persistent custom agent with focused instructions, tools, and optional model selection. |
-| **Skills** | Per-agent skill declarations | Atomic actions (run tests, open PR, scan dependencies, generate docs, etc.). Agents declare which actions they need; the runtime invokes them when appropriate. Custom skills can be added per project. |
-| **AGENTS.md** | Repository root | Project-wide instructions that all agents read. Used to encode TWTTY conventions, workflow standards, and project context. |
-| **GitHub Issues** *(optional)* | Repository issue tracker | Optional mirror of `W-<n>` work items from `plan.md` §3.1 for teams that want a kanban view. `plan.md` remains the source of truth; issues MUST NOT replace it. See [Section 9](#9-execution-rules). |
-| **Subagents** | Auto-spawned or `/agent <name>` | Isolated-context agents for specialized subtasks. Required for risk levels 4–5 (see [Section 7](#7-risk-enforcement-profile)). |
-| **Delegate** | `/delegate` | Hands off a fully specified work item to the GitHub Copilot Coding Agent (cloud, async) for issue-to-PR execution. |
-| **MCP Servers** | Per-agent configuration | Connects agents to external tools, data sources, or alternate models. |
+The default agent creates and configures Copilot customization surfaces on the Human User's behalf per the [§3 orchestrator framing](#default-agent-as-orchestrator). `When TWTTY configures` and `Log shape` apply to customization surfaces. Runtime commands and external features (marked `—`) are not configured by TWTTY but MAY be used during EXECUTE.
+
+Configuration specifics (file paths, frontmatter fields, feature names, settings) evolve independently and are the default agent's responsibility to look up in current Copilot documentation.
+
+| Feature | When TWTTY configures | Log shape | Purpose |
+|---------|-----------------------|-----------|---------|
+| **Repo-wide instructions** | 3a Setup (release-level) | `execute/3a/customization-instructions-<name>` | Always-on baseline every agent reads. Encodes TWTTY conventions, stage/gate names, replay-log rules, and project context. Silent by default. |
+| **Pattern-scoped instructions** | JIT during 3b (when a new file family is first touched) | `execute/<stage-task>/W-<n>-customization-instructions-<name>` | Instructions applied only to files matching a pattern the runtime supports. Silent by default. |
+| **Custom agents** | Hybrid — 3a Setup for roles predicted by `plan.md`; JIT via Refine cycle for surprises | `execute/3a/customization-agent-<name>` or `execute/<stage-task>/W-<n>-customization-agent-<name>` | Named persona with its own instructions, tools, and model. Used to fulfill a ROLE from §3 stage-task tables when the default agent decides a dedicated agent is warranted. Silent by default unless the tool set touches beyond project files. |
+| **Skills** | JIT during Execute (when a repeatable capability emerges) | `execute/<stage-task>/W-<n>-customization-skill-<name>` | Reusable capability that any agent loads on demand. Silent by default. |
+| **MCP servers** | 3a Setup for foundational integrations; JIT for release-scoped | `execute/3a/customization-mcp-<name>` or `execute/<stage-task>/W-<n>-customization-mcp-<name>` | Connects agents to external tools, data sources, or alternate models. **Ask before configuring** — MCP servers cross trust boundaries. |
+| **Prompt files** | JIT during Execute (extracted from repeated patterns) | `execute/<stage-task>/W-<n>-customization-prompt-<name>` | Reusable prompt invoked as a slash command. Silent by default. |
+| **Hooks** *(advanced)* | 3a Setup (must be in place before commits/edits) | `execute/3a/customization-hook-<name>` | Deterministic command run at agent-loop key points (e.g., format-on-edit, block-risky-commands). **Ask before configuring** — hooks can execute shell commands. |
+| **Delegate** | — (runtime command, not a customization) | — | Hands off a fully specified `W-<n>` to the GitHub Copilot Coding Agent (cloud, async) for branch-to-PR execution. |
+| **GitHub Issues** *(optional)* | — (external mirror, not configured by TWTTY) | — | Optional mirror of `W-<n>` work items from `plan.md` §3.1 for teams that want a kanban view. `plan.md` remains the source of truth; issues MUST NOT replace it. See [Section 9](#9-execution-rules). |
 
 ---
 
