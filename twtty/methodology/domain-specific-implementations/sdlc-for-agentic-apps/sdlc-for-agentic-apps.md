@@ -1,4 +1,4 @@
-# SDLC Agentic Domain-Specific Implementation
+# SDLC for Agentic Apps Domain-Specific Implementation
 
 > This document extends the baseline SDLC implementation at [../sdlc/sdlc.md](../sdlc/sdlc.md). Everything in the baseline SDLC applies unless this document adds stricter requirements.
 >
@@ -8,8 +8,8 @@
 
 | Section | Purpose |
 |---------|---------|
-| [1. Purpose](#1-purpose) | Scope of the agentic extension |
-| [2. Domain selection](#2-domain-selection) | Deterministic rule for choosing baseline SDLC vs agentic SDLC |
+| [1. Purpose](#1-purpose) | Scope of the extension for agentic apps |
+| [2. Domain selection](#2-domain-selection) | Deterministic rule for choosing baseline SDLC vs SDLC for agentic apps |
 | [3. Stage and gate deltas](#3-stage-and-gate-deltas) | Additions to SPEC, PLAN, and EXECUTE |
 | [4. Artifact locations](#4-artifact-locations) | Where agentic artifacts live |
 | [5. Runtime and roles](#5-runtime-and-roles) | Role decisions for evaluation work |
@@ -43,7 +43,7 @@ This rule is mandatory in Discovery. A seed-level hint MAY be present, but seed 
 
 ### 3.1 Spec delta (`spec/1b`-`spec/1d`)
 
-Use [templates/spec-agentic-template.md](templates/spec-agentic-template.md) instead of the baseline spec template.
+Use [templates/spec-for-agentic-apps-template.md](templates/spec-for-agentic-apps-template.md) instead of the baseline spec template.
 
 The agentic spec adds four required sections:
 
@@ -52,18 +52,18 @@ The agentic spec adds four required sections:
 - Section 11: Cost budget
 - Section 12: Safety policy
 
-`SPEC-EXIT` for agentic projects is satisfied only if all baseline `SPEC-EXIT` checks and all additional checks in the agentic template pass.
+`SPEC-EXIT` for projects using this extension is satisfied only if all baseline `SPEC-EXIT` checks and all additional checks in the extension template pass.
 
 ### 3.2 Plan delta (`plan/2a`-`plan/2c`)
 
-Use [templates/plan-agentic-template.md](templates/plan-agentic-template.md) instead of the baseline plan template.
+Use [templates/plan-for-agentic-apps-template.md](templates/plan-for-agentic-apps-template.md) instead of the baseline plan template.
 
 Agentic planning adds eval-harness-first orchestration:
 
 - Eval harness work items MUST use ID pattern `W-<n>-eval`.
 - At least one `W-<n>-eval` item MUST be sequenced before any `W-<m>` item that introduces LLM-driven behavior.
 
-`PLAN-EXIT` for agentic projects is satisfied only if all baseline `PLAN-EXIT` checks and all additional checks in the agentic template pass.
+`PLAN-EXIT` for projects using this extension is satisfied only if all baseline `PLAN-EXIT` checks and all additional checks in the extension template pass.
 
 ### 3.3 Execute delta (`execute/3a`-`execute/3m`)
 

@@ -1,4 +1,4 @@
-# Plan Template (Agentic)
+# Plan Template (For Agentic Apps)
 
 > This template extends the baseline SDLC plan template at [../../sdlc/templates/plan-template.md](../../sdlc/templates/plan-template.md).
 >

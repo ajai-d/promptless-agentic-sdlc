@@ -22,7 +22,7 @@
 
 This document is a Software Development Life Cycle (SDLC) domain-specific implementation of the [Core TWTTY Specification](../../core-twtty-methodology.md). It maps the four canonical TWTTY stages (`SEED → SPEC → PLAN → EXECUTE`) to concrete stage tasks, artifacts, agent roles, and approval gates for software delivery. In this implementation, EXECUTE includes delivery and operations.
 
-For releases with LLM-driven behavior that cannot be fully validated by deterministic pass/fail tests alone, use the agentic extension at [../sdlc-agentic/sdlc-agentic.md](../sdlc-agentic/sdlc-agentic.md). Baseline SDLC remains the default unless Discovery selects the agentic extension.
+For releases with LLM-driven behavior that cannot be fully validated by deterministic pass/fail tests alone, use the extension at [../sdlc-for-agentic-apps/sdlc-for-agentic-apps.md](../sdlc-for-agentic-apps/sdlc-for-agentic-apps.md). Baseline SDLC remains the default unless Discovery selects that extension.
 
 ---
 
@@ -122,7 +122,7 @@ For subsequent Release Scopes, the artifact path is `<project-folder>/spec/spec-
 
 **Intra-stage stage tasks 1a, 1b, 1c.** Each is approved through its own protocol cycle (Discovery for 1a, TWTTY loop for 1b/1c) and produces its own replay-execution log entry with `<approval-gate-name>` = `—`. Only 1d's approval triggers `SPEC-EXIT`.
 
-**Domain routing in Discovery (1a).** Before stage task 1b begins, the Spec Agent MUST ask this question verbatim: *"Does this release include LLM-driven behavior whose correctness cannot be verified with deterministic pass/fail tests alone?"* If the answer is `No`, continue with this baseline SDLC and [templates/spec-template.md](templates/spec-template.md). If the answer is `Yes`, switch to [../sdlc-agentic/sdlc-agentic.md](../sdlc-agentic/sdlc-agentic.md) and its templates before drafting 1b.
+**Domain routing in Discovery (1a).** Before stage task 1b begins, the Spec Agent MUST ask this question verbatim: *"Does this release include LLM-driven behavior whose correctness cannot be verified with deterministic pass/fail tests alone?"* If the answer is `No`, continue with this baseline SDLC and [templates/spec-template.md](templates/spec-template.md). If the answer is `Yes`, switch to [../sdlc-for-agentic-apps/sdlc-for-agentic-apps.md](../sdlc-for-agentic-apps/sdlc-for-agentic-apps.md) and its templates before drafting 1b.
 
 **Discovery interview (1a) termination.** The interview MUST end with an explicit termination prompt approved by the Human User. The Spec Agent proposes: *"End of discovery; proceed to 1b Business requirements."* On approval, the agent appends exactly one replay-log entry for 1a (`spec/1a`, `<approval-gate-name>` = `—`, `Execution outcome:` = `end of discovery`, `Artifact / path changed:` = `—`). This is the only `spec/1a` log entry produced; per [core Section 4.1](../../core-twtty-methodology.md#41-interview-me) individual Q&A pairs MUST NOT be logged. 1b MUST NOT start before this entry is recorded.
 

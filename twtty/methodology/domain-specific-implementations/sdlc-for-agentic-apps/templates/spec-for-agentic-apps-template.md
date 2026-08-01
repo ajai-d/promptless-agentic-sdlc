@@ -1,4 +1,4 @@
-# Spec Template (Agentic)
+# Spec Template (For Agentic Apps)
 
 > This template extends the baseline SDLC spec template at [../../sdlc/templates/spec-template.md](../../sdlc/templates/spec-template.md).
 >
