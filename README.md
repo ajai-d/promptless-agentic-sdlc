@@ -20,17 +20,16 @@ git clone https://github.com/ajai-d/promptless-agentic-sdlc.git
 
 Use **Agent** mode in GitHub Copilot Chat for the remaining steps.
 
-### 2. Create a project folder
+### 2. Create a workspace and project folder
 
-Pick a short, lowercase name for your project (e.g., `my-app/`). Create it **outside** this repo — your project stays completely independent.
+Pick a short, lowercase name for your project (for example, `my-app`) and create an empty folder with that name outside this repository. Then create a VS Code workspace that contains both folders:
 
-Then open both folders in one VS Code workspace:
+1. In VS Code, select `File → Open Folder...` and open `promptless-agentic-sdlc`.
+2. Select `File → Add Folder to Workspace...`.
+3. Select your new project folder.
+4. Select `File → Save Workspace As...` and save the workspace so you can reopen both folders together.
 
-1. Open this repo (`promptless-agentic-sdlc`) in VS Code.
-2. `File → Add Folder to Workspace...` → select your project folder.
-3. (Optional) `File → Save Workspace As...` to save the setup so you can re-open it later.
-
-You should now see both folders in the sidebar.
+You should now see `promptless-agentic-sdlc` and your project folder in the Explorer sidebar.
 
 ### 3. Create your seed
 
