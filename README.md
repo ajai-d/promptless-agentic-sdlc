@@ -2,7 +2,7 @@
 
 Build production-grade applications using AI agents without writing prompts or configuring anything. You describe your idea at a high level in a seed and AI takes over — the AI agent interviews you, drafts a spec, plans the work, writes the code, tests it, and ships it — checking with you at every step.
 
-Use it for traditional applications and for agentic AI applications. During Discovery, the AI selects the agentic-app extension when LLM behavior needs evaluation, safety, and cost controls beyond deterministic tests.
+Use it for traditional applications and agentic AI applications.
 
 ## About the methodology
 
