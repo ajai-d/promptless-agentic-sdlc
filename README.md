@@ -2,6 +2,8 @@
 
 Build production-grade applications using AI agents without writing prompts or configuring anything. You describe your idea at a high level in a seed and AI takes over — the AI agent interviews you, drafts a spec, plans the work, writes the code, tests it, and ships it — checking with you at every step.
 
+Use it for traditional applications and for agentic AI applications. During Discovery, the AI selects the agentic-app extension when LLM behavior needs evaluation, safety, and cost controls beyond deterministic tests.
+
 ## About the methodology
 
 TWTTY (Tell Me What To Tell You) is a methodology for working with AI agents that removes the burden of prompt engineering or any kind of configuration related to Agentic software development. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next step and the prompt to execute it. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
