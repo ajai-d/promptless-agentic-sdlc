@@ -16,7 +16,7 @@ Pick a short, lowercase name for your project (e.g., `my-app/`). Create it **out
 
 Then open both folders in one VS Code workspace:
 
-1. Open this repo (`agentic-dev-scafolding`) in VS Code.
+1. Open this repo (`promptless-agentic-sdlc`) in VS Code.
 2. `File → Add Folder to Workspace...` → select your project folder.
 3. (Optional) `File → Save Workspace As...` to save the setup so you can re-open it later.
 
@@ -34,9 +34,9 @@ Inside your project folder, create `seed/seed.md`. Use [this template](./twtty/t
 Use a fresh chat (not one you've been using for other work) so the AI starts with no prior context.
 
 ```text
-Read agentic-dev-scafolding/twtty/methodology/core-twtty-methodology.md and follow the TWTTY methodology.
+Read promptless-agentic-sdlc/twtty/methodology/core-twtty-methodology.md and follow the TWTTY methodology.
 Project seed: my-app/seed/seed.md
-Domain: agentic-dev-scafolding/twtty/methodology/domain-specific-implementations/sdlc/sdlc.md
+Domain: promptless-agentic-sdlc/twtty/methodology/domain-specific-implementations/sdlc/sdlc.md
 ```
 
 That's it. The AI agent takes over.
