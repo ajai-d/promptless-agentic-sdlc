@@ -10,7 +10,17 @@ See [`core-twtty-methodology.md`](./twtty/methodology/core-twtty-methodology.md)
 
 ## How to use it
 
-### 1. Create a project folder
+### 1. Clone this repository
+
+Install [VS Code](https://code.visualstudio.com/) and enable GitHub Copilot Chat. Then clone this repository and open it in VS Code:
+
+```text
+git clone https://github.com/ajai-d/promptless-agentic-sdlc.git
+```
+
+Use **Agent** mode in GitHub Copilot Chat for the remaining steps.
+
+### 2. Create a project folder
 
 Pick a short, lowercase name for your project (e.g., `my-app/`). Create it **outside** this repo — your project stays completely independent.
 
@@ -22,22 +32,24 @@ Then open both folders in one VS Code workspace:
 
 You should now see both folders in the sidebar.
 
-### 2. Create your seed
+### 3. Create your seed
 
 Inside your project folder, create `seed/seed.md`. Use [this template](./twtty/templates/seed-prompt-template.md) and fill in two sections in plain English:
 
 - **What I Want To Build** — your idea.
 - **Done Looks Like** — how you'll know it's finished.
 
-### 3. Open a new GitHub Copilot Chat in this workspace and paste this exact prompt
+### 4. Open a new GitHub Copilot Chat in this workspace and paste this prompt
 
 Use a fresh chat (not one you've been using for other work) so the AI starts with no prior context.
 
 ```text
 Read promptless-agentic-sdlc/twtty/methodology/core-twtty-methodology.md and follow the TWTTY methodology.
-Project seed: my-app/seed/seed.md
+Project seed: <your-project-folder>/seed/seed.md
 Domain: promptless-agentic-sdlc/twtty/methodology/domain-specific-implementations/sdlc/sdlc.md
 ```
+
+Replace `<your-project-folder>` with the folder name you chose in Step 2.
 
 That's it. The AI agent takes over.
 
