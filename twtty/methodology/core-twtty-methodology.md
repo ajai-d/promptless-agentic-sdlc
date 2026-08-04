@@ -202,6 +202,11 @@ twtty/
         templates/
           spec-template.md                            (artifact template for spec.md)
           plan-template.md                            (artifact template for plan.md)
+      sdlc-for-agentic-apps/
+        sdlc-for-agentic-apps.md                      (extension for LLM-driven applications)
+        templates/
+          spec-for-agentic-apps-template.md           (extended artifact template for spec.md)
+          plan-for-agentic-apps-template.md           (extended artifact template for plan.md)
   templates/
     seed-prompt-template.md                           (template the Human User copies)
 ```
