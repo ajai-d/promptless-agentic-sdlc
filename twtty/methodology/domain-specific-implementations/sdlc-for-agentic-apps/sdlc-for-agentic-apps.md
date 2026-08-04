@@ -43,7 +43,10 @@ This rule is mandatory in Discovery. A seed-level hint MAY be present, but seed 
 
 ### 3.1 Spec delta (`spec/1b`-`spec/1d`)
 
-Use [templates/spec-for-agentic-apps-template.md](templates/spec-for-agentic-apps-template.md) instead of the baseline spec template.
+Compose the spec using strict inheritance:
+
+1. Start from the baseline template [../sdlc/templates/spec-template.md](../sdlc/templates/spec-template.md) and complete Sections 1-8.
+2. Append Sections 9-12 from [templates/spec-for-agentic-apps-template.md](templates/spec-for-agentic-apps-template.md).
 
 The agentic spec adds four required sections:
 
@@ -52,18 +55,21 @@ The agentic spec adds four required sections:
 - Section 11: Cost budget
 - Section 12: Safety policy
 
-`SPEC-EXIT` for projects using this extension is satisfied only if all baseline `SPEC-EXIT` checks and all additional checks in the extension template pass.
+`SPEC-EXIT` for projects using this extension is satisfied only if all baseline `SPEC-EXIT` checks and all addendum checks pass.
 
 ### 3.2 Plan delta (`plan/2a`-`plan/2c`)
 
-Use [templates/plan-for-agentic-apps-template.md](templates/plan-for-agentic-apps-template.md) instead of the baseline plan template.
+Compose the plan using strict inheritance:
+
+1. Start from the baseline template [../sdlc/templates/plan-template.md](../sdlc/templates/plan-template.md).
+2. Apply orchestration constraints from [templates/plan-for-agentic-apps-template.md](templates/plan-for-agentic-apps-template.md).
 
 Agentic planning adds eval-harness-first orchestration:
 
 - Eval harness work items MUST use ID pattern `W-<n>-eval`.
 - At least one `W-<n>-eval` item MUST be sequenced before any `W-<m>` item that introduces LLM-driven behavior.
 
-`PLAN-EXIT` for projects using this extension is satisfied only if all baseline `PLAN-EXIT` checks and all additional checks in the extension template pass.
+`PLAN-EXIT` for projects using this extension is satisfied only if all baseline `PLAN-EXIT` checks and all addendum checks pass.
 
 ### 3.3 Execute delta (`execute/3a`-`execute/3m`)
 

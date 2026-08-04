@@ -1,59 +1,12 @@
-# Spec Template (For Agentic Apps)
+# Spec Addendum (For Agentic Apps)
 
-> This template extends the baseline SDLC spec template at [../../sdlc/templates/spec-template.md](../../sdlc/templates/spec-template.md).
+> This file is a strict addendum to the baseline SDLC spec template at [../../sdlc/templates/spec-template.md](../../sdlc/templates/spec-template.md).
 >
-> Sections 1-8 remain identical in purpose to baseline SDLC. This template adds Sections 9-12 and additional `SPEC-EXIT` checks.
+> **Do not duplicate baseline sections 1-8 here.** Start from the baseline spec template, then append Sections 9-12 from this addendum.
 >
 > All `[bracketed placeholders]` MUST be replaced. Section headings MUST be preserved verbatim for mechanical validation.
 
 ---
-
-## 1. Goals
-
-[What this release achieves. Bullet list, one goal per bullet.]
-
-## 2. Stakeholders
-
-[Who is affected by or accountable for this release. Bullet list: name/role + relationship.]
-
-## 3. Success metrics
-
-[How success is measured. Each metric MUST be quantified (target number, units, measurement window).]
-
-## 4. Constraints
-
-[Hard limits the solution MUST honor (technology, timeline, budget, compliance, integration). Use "None for this release." if there are no constraints.]
-
-## 5. Use cases
-
-[One H3 subsection per use case, ID-prefixed as `UC-<n>`. Each use case MUST include all five sub-bullets below.]
-
-### 5.1 UC-1: [title]
-
-- **Actors:** [who initiates / participates]
-- **Triggers:** [what starts the flow]
-- **Main flow:** [numbered steps, happy path]
-- **Exceptions:** [error / alternate flows]
-- **Dependencies:** [other use cases, systems, or data this depends on]
-
-## 6. Functional requirements (FR)
-
-- **FR-1:** [requirement]
-- **FR-2:** [requirement]
-
-## 7. Non-functional requirements (NFR)
-
-- **NFR-1:** [requirement]
-- **NFR-2:** [requirement]
-
-## 8. Acceptance criteria
-
-[Acceptance criteria remain objectively verifiable pass/fail conditions. Each AC MUST include a `Traces to:` line.] 
-
-- **AC-1:** [criterion stated as pass/fail]
-  - **Traces to:** FR-1
-- **AC-2:** [criterion stated as pass/fail]
-  - **Traces to:** FR-2, NFR-1
 
 ## 9. Tool schemas
 
@@ -100,34 +53,18 @@
 
 ---
 
-## SPEC-EXIT validation checklist
+## SPEC-EXIT validation checklist (addendum)
 
-The AI Agent MUST verify all checks below mechanically before requesting `SPEC-EXIT` approval.
+The AI Agent MUST first pass all baseline checks in [../../sdlc/templates/spec-template.md](../../sdlc/templates/spec-template.md), then pass all checks below.
 
-### Baseline checks (inherited)
-
-1. All twelve H2 sections present in order: `## 1. Goals` through `## 12. Safety policy`.
-2. No `[bracketed placeholder]` text remains.
-3. Required sections are non-empty: 1, 2, 3, 5, 6, 8, 9, 10, 11, 12. (Sections 4 and 7 MAY be `None for this release.`)
-4. Section 5 contains at least one `### 5.<n> UC-<n>:` subsection.
-5. Every UC subsection contains Actors, Triggers, Main flow, Exceptions, Dependencies.
-6. Section 6 contains at least one FR; each FR has unique `FR-<n>` ID.
-7. Every NFR (if any) has unique `NFR-<n>` ID.
-8. Section 8 contains at least one AC; each AC has unique `AC-<n>` ID and a `Traces to:` line referencing at least one valid FR/NFR ID.
-9. Every `FR-<n>` is referenced by at least one AC.
-10. Every `NFR-<n>` (if any) is referenced by at least one AC.
-11. No AC contains prohibited vague baseline terms `fast`, `user-friendly`, `robust`, `easy`, `simple`, `intuitive` (case-insensitive whole-word match).
-
-### Agentic checks (additional)
-
-12. Section 9 contains at least one `T-<n>` tool schema with all five required sub-bullets.
-13. Section 10 declares eval type, dataset path, at least one scoring dimension, and numeric threshold for each dimension.
-14. Section 10 declares a numeric baseline for every scoring dimension.
-15. Section 11 declares per-request, per-session, and per-day budgets.
-16. Section 11 defines explicit degradation behavior when a budget threshold is exceeded.
-17. Section 12 declares prohibited input classes, prohibited output classes, PII handling, jailbreak handling, and escalation path.
-18. Every `T-<n>` in Section 9 is referenced by at least one FR or NFR.
-19. Every scoring dimension in Section 10 is referenced by at least one AC in Section 8.
-20. No AC contains prohibited unquantified agentic-quality adjectives `helpful`, `accurate`, `relevant`, `natural`, `human-like` (case-insensitive whole-word match) unless the AC also cites a dimension/threshold in Section 10.
-21. Section 10 run protocol writes evaluation outputs to a machine-readable artifact path under `reports/eval/`.
-22. Section 12 escalation path defines the trigger condition and the destination role/team.
+1. Section 9 contains at least one `T-<n>` tool schema with all five required sub-bullets.
+2. Section 10 declares eval type, dataset path, at least one scoring dimension, and numeric threshold for each dimension.
+3. Section 10 declares a numeric baseline for every scoring dimension.
+4. Section 11 declares per-request, per-session, and per-day budgets.
+5. Section 11 defines explicit degradation behavior when a budget threshold is exceeded.
+6. Section 12 declares prohibited input classes, prohibited output classes, PII handling, jailbreak handling, and escalation path.
+7. Every `T-<n>` in Section 9 is referenced by at least one FR or NFR.
+8. Every scoring dimension in Section 10 is referenced by at least one AC in Section 8.
+9. No AC contains prohibited unquantified agentic-quality adjectives `helpful`, `accurate`, `relevant`, `natural`, `human-like` (case-insensitive whole-word match) unless the AC also cites a dimension/threshold in Section 10.
+10. Section 10 run protocol writes evaluation outputs to a machine-readable artifact path under `reports/eval/`.
+11. Section 12 escalation path defines the trigger condition and the destination role/team.
