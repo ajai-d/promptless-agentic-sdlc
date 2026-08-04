@@ -54,6 +54,13 @@ Replace `<your-project-folder>` with the folder name you chose in Step 2.
 
 That's it. The AI agent takes over.
 
+## Why strict inheritance?
+
+The baseline SDLC files are the source of truth. The agentic-app files are add-ons, not rewrites.
+
+- For AI agents: this keeps execution deterministic and prevents drift or duplicate rules.
+- For humans: this makes reviews easier because you can quickly see what is baseline versus what is agentic-specific.
+
 ## License
 
 [MIT](./LICENSE)
