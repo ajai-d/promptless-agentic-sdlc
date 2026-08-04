@@ -1,12 +1,12 @@
 # 🗺️ ROADMAP
 
-> Future enhancements and ideas for TMWTTY.
+> Future enhancements and ideas for TWTTY.
 
 ---
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|
-| 1 | Legacy code support — generate spec from existing codebase using analysis tools, then plug into TMWTTY seed | ⬜ Planned | Enables TMWTTY for brownfield/legacy projects, not just greenfield |
+| 1 | Legacy code support — generate spec from existing codebase using analysis tools, then plug into TWTTY seed | ⬜ Planned | Enables TWTTY for brownfield/legacy projects, not just greenfield |
 
 ---
 

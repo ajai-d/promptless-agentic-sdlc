@@ -1,31 +1,47 @@
-# Agentic Dev Scaffolding
+# Build Apps with AI without writing anything — not even prompts
 
-> Build software with AI agents using the **Tell Me What To Tell You™** methodology.
+Build production-grade applications using AI agents without writing prompts or configuring anything. You describe your idea at a high level in a seed and AI takes over — the AI agent interviews you, drafts a spec, plans the work, writes the code, tests it, and ships it — checking with you at every step.
 
----
+## About the methodology
 
-## What Is This?
+TWTTY (Tell Me What To Tell You) is a methodology for working with AI agents that removes the burden of prompt engineering or any kind of configuration related to Agentic software development. Instead of crafting prompts yourself, you provide a Project Seed (seed prompt) that captures the project's overall intent, and the AI Agent proposes each next step and the prompt to execute it. The AI Agent executes only after your explicit approval or modification. Every interaction is captured in a replay-execution log that serves as both project history and a reproducible reference.
 
-A real project built from scratch using TMWTTY — a 3-stage methodology for working with AI coding agents. Start with an idea, end with production code.
+See [`core-twtty-methodology.md`](./twtty/methodology/core-twtty-methodology.md) for the full specification.
 
-## Folder Structure
+## How to use it
 
-| Folder | Purpose |
-|--------|---------|
-| [`tmwtty/`](./tmwtty/) | The methodology — how TMWTTY works |
-| [`plan/`](./plan/) | The structured plan for this project |
-| [`project/`](./project/) | Source code |
-| [`replay-execution/`](./replay-execution/) | Step-by-step playbook captured during execution |
-| [`archive/`](./archive/) | Prior iterations and reference material |
+### 1. Create a project folder
 
-## Getting Started
+Pick a short, lowercase name for your project (e.g., `my-app/`). Create it **outside** this repo — your project stays completely independent.
 
-1. Read [`tmwtty/00-tmwtty-methodology.md`](./tmwtty/00-tmwtty-methodology.md) — understand the method
-2. Follow [`tmwtty/01-getting-started.md`](./tmwtty/01-getting-started.md) — it walks you through
-3. Fill in [`tmwtty/02-seed-prompt-template.md`](./tmwtty/02-seed-prompt-template.md) — state what you want to build
-4. Generate and approve your plan in `plan/plan.md`
-5. Execute — code goes to `project/`, steps recorded in `replay-execution/`
+Then open both folders in one VS Code workspace:
+
+1. Open this repo (`promptless-agentic-sdlc`) in VS Code.
+2. `File → Add Folder to Workspace...` → select your project folder.
+3. (Optional) `File → Save Workspace As...` to save the setup so you can re-open it later.
+
+You should now see both folders in the sidebar.
+
+### 2. Create your seed
+
+Inside your project folder, create `seed/seed.md`. Use [this template](./twtty/templates/seed-prompt-template.md) and fill in two sections in plain English:
+
+- **What I Want To Build** — your idea.
+- **Done Looks Like** — how you'll know it's finished.
+
+### 3. Open a new GitHub Copilot Chat in this workspace and paste this exact prompt
+
+Use a fresh chat (not one you've been using for other work) so the AI starts with no prior context.
+
+```text
+Read promptless-agentic-sdlc/twtty/methodology/core-twtty-methodology.md and follow the TWTTY methodology.
+Project seed: my-app/seed/seed.md
+Domain: promptless-agentic-sdlc/twtty/methodology/domain-specific-implementations/sdlc/sdlc.md
+```
+
+That's it. The AI agent takes over.
 
 ## License
 
-[MIT](./archive/LICENSE)
+[MIT](./LICENSE)
+
